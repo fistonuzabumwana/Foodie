@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main-layout}"> <head>
+    <title>Our Products - Foodie</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <style>
+        /* Basic styling for product cards */
+        .product-card {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden; /* Ensures image corners are rounded if image is direct child */
+        }
+        .product-card img {
+            width: 100%;
+            height: 200px; /* Fixed height for uniformity */
+            object-fit: cover; /* Scales image nicely */
+        }
+        .product-card .card-body {
+            padding: 15px;
+        }
+        .product-card .card-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<section layout:fragment="content"> <div class="container mt-4">
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+    <h1 class="mb-4 text-center">Explore Our Menu</h1>
+
+    <div class="row">
+        <div th:if="${#lists.isEmpty(products)}" class="col">
+            <p class="text-center">No delicious items available at the moment. Please check back soon!</p>
+        </div>
+        <div th:each="product : ${products}" class="col-md-4 col-sm-6">
+            <div class="card product-card shadow-sm">
+                <img th:src="${product.imageUrl ?: '/images/default-food.png'}" class="card-img-top" th:alt="${product.name}" />
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${product.name}">Product Name</h5>
+                    <p class="card-text" th:text="${#strings.abbreviate(product.description, 80)}">Short description...</p>
+                    <p class="card-text fs-5 fw-bold" th:text="${#numbers.formatCurrency(product.price)}">$0.00</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a th:href="@{/products/view/{id}(id=${product.id})}" class="btn btn-outline-primary btn-sm">View Details</a>
+                        <form th:action="@{/cart/add/{productId}(productId=${product.id})}" method="post" style="display: inline;">
+                            <input type="hidden" name="quantity" value="1" /> <button type="submit" class="btn btn-primary btn-sm">Add to Cart</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

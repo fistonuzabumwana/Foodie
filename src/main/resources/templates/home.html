@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" data-bs-theme="dark"> <head>
+    <title>Welcome to Foodie - Taste the Future!</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<header class="hero-section">
+    <div class="container">
+        <h1>Foodie: Your Next Meal, Reimagined.</h1>
+        <p class="lead">Experience culinary innovation with a futuristic twist, delivered right to your doorstep.</p>
+        <a th:href="@{/products}" class="btn btn-primary btn-lg btn-cta">Explore Our Menu</a>
+        <a th:href="@{/register}" sec:authorize="!isAuthenticated()" class="btn btn-outline-light btn-lg btn-cta ms-2">Join Foodie</a>
+    </div>
+</header>
+
+<div class="container my-5">
+
+    <section class="product-showcase">
+        <h2 class="section-title">Taste the Future</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100"> <img th:src="@{/images/featured-product-1.jpg}" class="card-img-top" alt="Featured Product 1"> <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Quantum Quinoa Bowl</h5>
+                    <p class="card-text">A vibrant bowl packed with nutrient-rich quinoa and exotic space-greens.</p>
+                    <a th:href="@{/products}" class="btn btn-outline-secondary mt-auto">View Details</a>
+                </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img th:src="@{/images/featured-product-2.jpg}" class="card-img-top" alt="Featured Product 2">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Cybernetic Sushi Platter</h5>
+                        <p class="card-text">Precision-crafted sushi with ingredients sourced from hydroponic labs.</p>
+                        <a th:href="@{/products}" class="btn btn-outline-secondary mt-auto">View Details</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img th:src="@{/images/featured-product-3.jpg}" class="card-img-top" alt="Featured Product 3">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Galaxy Glazed Donuts</h5>
+                        <p class="card-text">Out-of-this-world donuts with an iridescent, shimmering glaze.</p>
+                        <a th:href="@{/products}" class="btn btn-outline-secondary mt-auto">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section">
+        <h2 class="section-title">Why Foodie?</h2>
+        <div class="row text-center">
+            <div class="col-md-4 mb-4">
+                <i class="bi bi-truck feature-icon"></i> <h3>Hyper-Speed Delivery</h3>
+                <p>Get your futuristic meals delivered faster than light (almost!).</p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <i class="bi bi-stars feature-icon"></i>
+                <h3>Stellar Ingredients</h3>
+                <p>Sourced for peak freshness and out-of-this-world flavor.</p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <i class="bi bi-cpu feature-icon"></i>
+                <h3>Seamless Ordering</h3>
+                <p>Our advanced interface makes ordering your next meal a breeze.</p>
+            </div>
+        </div>
+    </section>
+
+    <div sec:authorize="isAuthenticated()" class="text-center my-4 p-3 bg-light border rounded" th:if="${false}"> <p>Logged in as: <strong sec:authentication="name">User</strong> | Roles: <span sec:authentication="principal.authorities">[ROLE_USER]</span></p>
+    </div>
+
+</div>
+<footer class="py-4 mt-auto text-center bg-dark"> <div class="container">
+    <p class="m-0 text-light"> Copyright &copy; Foodie 2025 - The Future of Food, Today.
+    </p>
+</div>
+</footer>
+
+<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main-layout}">
+<head>
+    <title th:text="${product.name} + ' - Foodie'">Product Details</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <style>
+        .product-detail-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+<section layout:fragment="content">
+    <div class="container mt-5" th:if="${product}">
+        <div class="row">
+            <div class="col-md-6">
+                <img th:src="${product.imageUrl ?: '/images/default-food.png'}" class="product-detail-img shadow" th:alt="${product.name}" />
+            </div>
+            <div class="col-md-6">
+                <h1 th:text="${product.name}">Product Name</h1>
+                <p class="text-muted" th:text="'Product ID: ' + ${product.id}">Product ID</p>
+                <hr>
+                <p class="lead" th:text="${product.description}">Full product description goes here. It can be quite long and detailed.</p>
+                <h3 class="my-3" th:text="${#numbers.formatCurrency(product.price)}">$0.00</h3>
+
+                <div th:if="${product.stockQuantity > 0}">
+                    <p class="text-success" th:text="'In Stock: ' + ${product.stockQuantity} + ' available'">In Stock</p>
+                    <form th:action="@{/cart/add/{productId}(productId=${product.id})}" method="post" class="d-inline-flex align-items-center">
+                        <div class="form-group me-2">
+                            <label for="quantity" class="visually-hidden">Quantity:</label>
+                            <input type="number" name="quantity" id="quantity" value="1" min="1" th:max="${product.stockQuantity}" class="form-control form-control-sm" style="width: 70px;" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add to Cart</button>
+                    </form>
+                </div>
+                <div th:if="${product.stockQuantity <= 0}">
+                    <p class="text-danger">Out of Stock</p>
+                </div>
+
+                <div class="mt-4">
+                    <a th:href="@{/products}" class="btn btn-outline-secondary">Back to Products</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-5" th:unless="${product}">
+        <p class="alert alert-warning">Product details could not be loaded.</p>
+        <a th:href="@{/products}" class="btn btn-outline-secondary">Back to Products</a>
+    </div>
+</section>
+<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

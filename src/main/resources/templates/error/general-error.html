@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${errorTitle ?: 'An Error Occurred'}">An Error Occurred</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+<div class="container mt-5">
+    <h2 th:text="${errorTitle ?: 'An Error Occurred'}">Error</h2>
+    <div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}">
+        Default error message.
+    </div>
+    <a th:href="@{/}" class="btn btn-primary">Go to Homepage</a>
+</div>
+<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

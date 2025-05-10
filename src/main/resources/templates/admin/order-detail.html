@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title th:text="'Admin - Order Details - #' + ${order?.id}">Order Details</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container mt-4">
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <div th:if="${order}">
+        <h2>Order Details - #<span th:text="${order.id}">123</span></h2>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header">Order Information</div>
+                    <div class="card-body">
+                        <p><strong>Customer:</strong> <span th:text="${order.user?.username ?: 'N/A'}"></span></p>
+                        <p><strong>Email:</strong> <span th:text="${order.user?.email ?: 'N/A'}"></span></p>
+                        <p><strong>Order Date:</strong> <span th:text="${#temporals.format(order.orderDate, 'dd-MMM-yyyy HH:mm')}"></span></p>
+                        <p><strong>Current Status:</strong> <span class="fw-bold" th:text="${order.status}"></span></p>
+                        <p><strong>Order Total:</strong> <span class="fw-bold" th:text="${#numbers.formatCurrency(order.totalAmount)}"></span></p>
+                    </div>
+                </div>
+
+                <h4>Items Ordered:</h4>
+                <table class="table table-sm">
+                    <thead>
+                    <tr><th>Product</th><th>Quantity</th><th>Price @ Purchase</th><th>Subtotal</th></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item : ${order.orderItems}">
+                        <td th:text="${item.product.name}">Product Name</td>
+                        <td th:text="${item.quantity}">1</td>
+                        <td th:text="${#numbers.formatCurrency(item.priceAtPurchase)}"></td>
+                        <td th:text="${#numbers.formatCurrency(item.priceAtPurchase.multiply(new java.math.BigDecimal(item.quantity)))}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">Update Order Status</div>
+                    <div class="card-body">
+                        <form th:action="@{/admin/orders/update-status/{orderId}(orderId=${order.id})}" method="post">
+                            <div class="mb-3">
+                                <label for="status" class="form-label">New Status:</label>
+                                <select id="status" name="status" class="form-select">
+                                    <option th:each="st : ${statuses}" th:value="${st}" th:text="${st}" th:selected="${st == order.status}"></option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update Status</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a th:href="@{/admin/orders}" class="btn btn-outline-secondary mt-3">Back to All Orders</a>
+    </div>
+    <div th:unless="${order}" class="alert alert-warning">Order details could not be loaded.</div>
+</div>
+<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

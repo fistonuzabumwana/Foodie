@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/> </head>
+<body>
+<div class="container">
+    <h2>Login to Foodie</h2>
+    <div th:if="${param.error}" class="alert alert-danger">
+        Invalid username or password.
+    </div>
+    <div th:if="${param.logout}" class="alert alert-success">
+        You have been logged out.
+    </div>
+
+    <form th:action="@{/perform_login}" method="post">
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required autofocus />
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required />
+        </div>
+        <div>
+            <button type="submit">Log in</button>
+        </div>
+    </form>
+    <p>New user? <a th:href="@{/register}">Register here</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,130 @@
+/* Import Google Fonts - Example */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Montserrat:wght@400;500;700&display=swap');
+
+body {
+    /*font-family: 'Montserrat', sans-serif; !* Default body font *!*/
+    /* Example: Base styling if you chose a dark theme manually or want to override Bootstrap dark */
+    /* background-color: #121212; */
+    /* color: #e0e0e0; */
+}
+
+h1, h2, h3, h4, h5, h6, .navbar-brand, .card-title { /* Apply heading font to more elements */
+    /*font-family: 'Orbitron', sans-serif; !* Futuristic heading font *!*/
+    /* color: #00BFFF; */ /* Example accent color for headings */
+}
+
+/* --- General Modern Touches --- */
+a {
+    /* color: #00BFFF; */ /* Example accent for links */
+    /* transition: color 0.2s ease-in-out; */
+}
+/* a:hover { */
+/* color: #00FFFF; */ /* Lighter accent on hover */
+/* } */
+
+.btn-primary { /* Customizing Bootstrap's primary button */
+    /* background-color: #0D6EFD; */ /* Your chosen accent */
+    /* border-color: #0A58CA; */
+    /* Add a bit more character */
+    /* border-radius: 4px; */
+    /* text-transform: uppercase; */
+    /* letter-spacing: 0.05em; */
+    /* transition: all 0.3s ease; */
+}
+/* .btn-primary:hover { */
+/* box-shadow: 0 0 10px rgba(13, 110, 253, 0.5); */ /* Subtle glow */
+/* } */
+
+.card {
+    /* border: 1px solid #333; */ /* For dark themes, or a subtle border */
+    /* border-radius: 0; */ /* Sharp edges for a more techy look, or slightly rounded */
+    /* background-color: #1e1e1e; */ /* If dark theme and customizing card background */
+    /* box-shadow: 0 4px 8px rgba(0,0,0,0.3); */ /* Subtle shadow for depth */
+}
+
+/* In style.css - Enhancing product cards */
+.product-card {
+    background-color: var(--bs-card-bg, #222); /* Adapts to light/dark theme if var() is set by Bootstrap */
+    border: 1px solid var(--bs-border-color-translucent, #444);
+    border-radius: 4px; /* Or 0 for sharper edges */
+    margin-bottom: 20px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    overflow: hidden;
+}
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 191, 255, 0.2); /* Accent color shadow */
+}
+.product-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+.product-card .card-body {
+    padding: 1rem;
+}
+.product-card .card-title {
+    /* font-family: 'Orbitron', sans-serif; */ /* Already global */
+    font-size: 1.15rem;
+    margin-bottom: 0.5rem;
+}
+.product-card .card-text.price { /* Add a class="price" to your price paragraph */
+    font-size: 1.25rem;
+    font-weight: bold;
+    /* color: #00FF00; */ /* Example: Neon green price */
+    margin-bottom: 1rem;
+}
+
+/* Example: Basic hero section styling - customize heavily in style.css */
+.hero-section {
+    background: url('/images/hero-background.jpg') no-repeat center center; /* Replace with a cool futuristic food background */
+    background-size: cover;
+    color: white; /* Adjust text color based on your background */
+    padding: 8rem 1rem; /* More padding for impact */
+    text-align: center;
+    /* For dark overlay on image to make text pop: */
+    /* position: relative; */
+}
+/* .hero-section::before { */
+/* content: ''; */
+/* position: absolute; */
+/* top: 0; right: 0; bottom: 0; left: 0; */
+/* background-color: rgba(0,0,0,0.5); */ /* Dark overlay */
+/* } */
+/* .hero-section .container { */
+/* position: relative; */ /* To keep content above overlay */
+/* z-index: 1; */
+/* } */
+
+.hero-section h1 {
+    font-size: 3.5rem; /* Larger heading */
+    font-weight: 700;
+    /* text-shadow: 2px 2px 4px rgba(0,0,0,0.7); */ /* Text shadow for readability on image */
+}
+.hero-section .lead {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+}
+.btn-cta { /* Custom style for Call To Action buttons */
+    font-size: 1.2rem;
+    padding: 0.8rem 2rem;
+    /* Add your futuristic button styling here or in style.css */
+    /* e.g., border-radius: 2px; text-transform: uppercase; letter-spacing: 0.05em; */
+}
+
+.section-title {
+    text-align: center;
+    margin-top: 4rem;
+    margin-bottom: 3rem;
+    font-size: 2.5rem;
+    /* font-family: 'Orbitron', sans-serif; */ /* If Orbitron is your heading font */
+}
+
+.feature-icon {
+    font-size: 3rem; /* Make icons larger */
+    /* color: #00BFFF; */ /* Example accent color */
+    margin-bottom: 1rem;
+}
+.product-showcase .card {
+    /* Add custom styling for product cards here to match futuristic theme */
+}
