@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin-layout}">
+<head>
+    <title th:text="${pageTitle ?: 'Edit Product'}">Edit Product</title>
+    <!-- Add your custom admin styles -->
+    <link rel="stylesheet" th:href="@{/css/admin-forms.css}" />
+    <!-- Include icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fredoka+One&display=swap" rel="stylesheet">
+
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/footer.css}"/>
+
+    <link rel="stylesheet" th:href="@{/css/landing-light.css}" />
+    <link rel="stylesheet" th:href="@{/css/Navbar.css}">
+</head>
+<body>
+
+<!-- Inject Navbar Fragment -->
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<section layout:fragment="content">
+    <div class="admin-container">
+        <!-- Floating background elements -->
+        <div class="admin-bg-elements">
+            <div class="bg-circle bg-circle-orange"></div>
+            <div class="bg-circle bg-circle-white"></div>
+        </div>
+
+        <div class="admin-header">
+            <h2 class="admin-title" th:text="${pageTitle ?: 'Edit Product'}">Edit Product</h2>
+            <div class="admin-actions">
+                <a th:href="@{/admin/products}" class="btn btn-back">
+                    <i class="fas fa-arrow-left"></i> Back to Products
+                </a>
+            </div>
+        </div>
+
+        <!-- Success/Error Messages with animations -->
+        <div class="admin-alerts">
+            <div th:if="${successMessage}" class="alert alert-success animate__animated animate__fadeInDown">
+                <i class="fas fa-check-circle me-2"></i>
+                <span th:text="${successMessage}"></span>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger animate__animated animate__headShake">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <span th:text="${errorMessage}"></span>
+            </div>
+        </div>
+
+        <form th:action="@{/admin/products/save}" th:object="${product}" method="post" enctype="multipart/form-data" class="admin-form">
+            <input type="hidden" th:field="*{id}" />
+
+            <!-- Form Grid Layout -->
+            <div class="form-grid">
+                <!-- Left Column -->
+                <div class="form-column">
+                    <!-- Product Name -->
+                    <div class="form-group floating-label">
+                        <input type="text" id="name" th:field="*{name}" class="form-control" placeholder=" " required minlength="3" maxlength="255"/>
+                        <label for="name">Product Name</label>
+                        <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="form-error">
+                            <i class="fas fa-exclamation-triangle"></i> <span th:replace="*{name}"></span>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group floating-label">
+                        <textarea id="description" th:field="*{description}" class="form-control" rows="5" placeholder=" "></textarea>
+                        <label for="description">Description</label>
+                        <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="form-error">
+                            <i class="fas fa-exclamation-triangle"></i> <span th:replace="*{description}"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="form-column">
+                    <!-- Price -->
+                    <div class="form-group floating-label">
+                        <div class="input-group">
+                            <span class="input-group-icon"><i class="fas fa-dollar-sign"></i></span>
+                            <input type="number" step="0.01" id="price" th:field="*{price}" class="form-control" placeholder=" " required min="0.01"/>
+                            <label for="price">Price</label>
+                        </div>
+                        <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="form-error">
+                            <i class="fas fa-exclamation-triangle"></i> <span th:replace="*{price}"></span>
+                        </div>
+                    </div>
+
+                    <!-- Stock Quantity -->
+                    <div class="form-group floating-label">
+                        <div class="input-group">
+                            <span class="input-group-icon"><i class="fas fa-boxes"></i></span>
+                            <input type="number" id="stockQuantity" th:field="*{stockQuantity}" class="form-control" placeholder=" " required min="0"/>
+                            <label for="stockQuantity">Stock Quantity</label>
+                        </div>
+                        <div th:if="${#fields.hasErrors('stockQuantity')}" th:errors="*{stockQuantity}" class="form-error">
+                            <i class="fas fa-exclamation-triangle"></i> <span th:replace="*{stockQuantity}"></span>
+                        </div>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="form-group floating-label">
+                        <div class="input-group">
+                            <span class="input-group-icon"><i class="fas fa-tag"></i></span>
+                            <input type="text" id="category" th:field="*{category}" class="form-control" placeholder=" "/>
+                            <label for="category">Category</label>
+                        </div>
+                        <div th:if="${#fields.hasErrors('category')}" th:errors="*{category}" class="form-error">
+                            <i class="fas fa-exclamation-triangle"></i> <span th:replace="*{category}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Upload Section -->
+            <div class="image-upload-section">
+                <h3 class="section-title"><i class="fas fa-image me-2"></i> Product Image</h3>
+
+                <div class="file-upload-wrapper">
+                    <input type="file" id="image" name="image" class="file-upload-input" accept="image/*" data-max-size="5242880"/>
+                    <label for="image" class="file-upload-label">
+                        <div class="file-upload-design">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Drag & drop your image here or click to browse</p>
+                            <small class="text-muted">JPEG, PNG (Max 5MB)</small>
+                        </div>
+                    </label>
+                    <div class="file-upload-feedback"></div>
+                </div>
+
+                <!-- Current Image Preview -->
+                <div class="current-image-preview" th:if="${imageFileId != null}">
+                    <div class="preview-header">
+                        <h4>Current Image</h4>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="removeImage" name="removeImage">
+                            <label class="form-check-label" for="removeImage">Remove Image</label>
+                        </div>
+                    </div>
+                    <div class="image-container">
+                        <img th:src="@{'/products/image/' + ${id}}"
+                             class="img-preview"
+                             alt="Current product image"/>
+                        <div class="image-overlay">
+                            <span>Current Image</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Default Image Notice -->
+                <div th:if="${imageFileId == null}" class="default-image-notice">
+                    <i class="fas fa-info-circle"></i> No image currently set. Default image will be used if none is uploaded.
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-save">
+                    <i class="fas fa-save"></i> Save Product
+                </button>
+                <a th:href="@{'/admin/products/delete/' + ${id}}"
+                   class="btn btn-delete"
+                   onclick="return confirm('Are you sure you want to delete this product? This action cannot be undone.')">
+                    <i class="fas fa-trash-alt"></i> Delete Product
+                </a>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- Inject Footer Fragment -->
+<div th:replace="~{fragments/footer :: mainFooter}"></div>
+
+<!-- Back to Top Button -->
+<a href="#" class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+</a>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/admin-forms.js}"></script>
+</body>
+</html>

@@ -3,57 +3,216 @@
 <head>
     <title th:text="'Order Confirmation - #' + ${order?.id}">Order Confirmation</title>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
-    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/order-confirmation.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fredoka+One&display=swap" rel="stylesheet">
+
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/footer.css}"/>
+
+    <link rel="stylesheet" th:href="@{/css/landing-light.css}" />
+    <link rel="stylesheet" th:href="@{/css/Navbar.css}">
 </head>
 <body>
 <div th:replace="~{fragments/navbar :: mainNavbar}"></div>
 
-<div class="container mt-4">
-    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
-    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+<!-- Floating background elements -->
+<div class="confirmation-bg-elements">
+    <div class="bg-circle-orange"></div>
+    <div class="bg-circle-white"></div>
+    <div class="floating-food floating-confetti"></div>
+</div>
 
-    <div th:if="${order}">
-        <h2>Order Confirmation</h2>
-        <p>Thank you for your order! Your order has been placed successfully.</p>
+<div class="container confirmation-container">
+    <!-- Messages -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 
-        <div class="card mb-4">
-            <div class="card-header">
-                Order Summary - Order #<span th:text="${order.id}">123</span>
+    <!-- Order Content -->
+    <div th:if="${order}" class="animate__animated animate__fadeIn">
+        <!-- Confirmation Header -->
+        <div class="confirmation-header">
+            <div class="confirmation-icon animate__animated animate__bounceIn">
+                <i class="fas fa-check-circle"></i>
             </div>
-            <div class="card-body">
-                <p><strong>Order Date:</strong> <span th:text="${#temporals.format(order.orderDate, 'dd-MMM-yyyy HH:mm')}">01-Jan-2024 10:00</span></p>
-                <p><strong>Order Status:</strong> <span th:text="${order.status}">PENDING</span></p>
-                <p><strong>Order Total:</strong> <span class="fw-bold" th:text="${#numbers.formatCurrency(order.totalAmount)}">$0.00</span></p>
+            <h1>Order Confirmed!</h1>
+            <p class="lead">Thank you for your order! We're preparing your delicious food now.</p>
+            <div class="order-number">
+                Order #<span th:text="${order.id}">123</span>
             </div>
         </div>
 
-        <h4>Items Ordered:</h4>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Price at Purchase</th>
-                <th>Subtotal</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="item : ${order.orderItems}">
-                <td th:text="${item.product.name}">Product Name</td>
-                <td th:text="${item.quantity}">1</td>
-                <td th:text="${#numbers.formatCurrency(item.priceAtPurchase)}">$0.00</td>
-                <td th:text="${#numbers.formatCurrency(item.priceAtPurchase.multiply(new java.math.BigDecimal(item.quantity)))}">$0.00</td>            </tr>
-            </tbody>
-        </table>
-        <a th:href="@{/products}" class="btn btn-primary mt-3">Continue Shopping</a>
-        <a th:href="@{/orders/history}" class="btn btn-outline-secondary mt-3 ms-2">View Order History</a>
+        <!-- Order Status Timeline -->
+        <div class="status-timeline">
+            <div class="timeline-step active">
+                <div class="step-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="step-label">Order Placed</div>
+                <div class="step-time" th:text="${#temporals.format(order.orderDate, 'h:mm a')}">10:00 AM</div>
+            </div>
+            <div class="timeline-step">
+                <div class="step-icon">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <div class="step-label">Preparing</div>
+                <div class="step-time">Soon</div>
+            </div>
+            <div class="timeline-step">
+                <div class="step-icon">
+                    <i class="fas fa-motorcycle"></i>
+                </div>
+                <div class="step-label">On the Way</div>
+                <div class="step-time">--</div>
+            </div>
+            <div class="timeline-step">
+                <div class="step-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div class="step-label">Delivered</div>
+                <div class="step-time">--</div>
+            </div>
+        </div>
+
+        <!-- Order Summary Card -->
+        <div class="order-summary-card animate__animated animate__fadeInUp">
+            <div class="summary-header">
+                <h2><i class="fas fa-receipt me-2"></i> Order Summary</h2>
+                <div class="order-status-badge">
+                    <span th:text="${order.status}">PROCESSING</span>
+                </div>
+            </div>
+
+            <div class="summary-details">
+                <div class="detail-row">
+                    <span>Order Date</span>
+                    <span th:text="${#temporals.format(order.orderDate, 'EEEE, MMMM d, yyyy - h:mm a')}">Monday, January 1, 2024 - 10:00 AM</span>
+                </div>
+
+
+                <div class="detail-row total">
+                    <span>Order Total</span>
+                    <span class="order-total" th:text="${#numbers.formatCurrency(order.totalAmount)}">$0.00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Items -->
+        <div class="order-items-section animate__animated animate__fadeInUp">
+            <h3><i class="fas fa-utensils me-2"></i> Your Order</h3>
+            <div class="order-items">
+                <div th:each="item : ${order.orderItems}" class="order-item">
+                    <div class="item-image">
+                        <img th:src="${item.product.imageUrl ?: '/images/default-food.png'}"
+                             alt="Product Image"
+                             class="img-fluid" />
+                    </div>
+                    <div class="item-details">
+                        <h4 th:text="${item.product.name}">Product Name</h4>
+                        <div class="item-meta">
+                            <span class="item-quantity" th:text="'×' + ${item.quantity}">×1</span>
+                            <span class="item-price" th:text="${#numbers.formatCurrency(item.priceAtPurchase)}">$0.00</span>
+                        </div>
+                    </div>
+                    <div class="item-subtotal" th:text="${#numbers.formatCurrency(item.priceAtPurchase.multiply(new java.math.BigDecimal(item.quantity)))}">$0.00</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Actions -->
+        <div class="order-actions animate__animated animate__fadeInUp">
+            <a th:href="@{/products}" class="btn btn-primary-orange">
+                <i class="fas fa-utensils me-2"></i> Order Again
+            </a>
+            <a th:href="@{/orders/history}" class="btn btn-outline-orange">
+                <i class="fas fa-history me-2"></i> View Order History
+            </a>
+            <a href="#" class="btn btn-outline-secondary">
+                <i class="fas fa-question-circle me-2"></i> Need Help?
+            </a>
+        </div>
+
+        <!-- Delivery Estimate -->
+        <div class="delivery-estimate animate__animated animate__fadeInUp">
+            <div class="delivery-card">
+                <div class="delivery-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="delivery-info">
+                    <h4>Estimated Delivery Time</h4>
+                    <p>Your order should arrive within <strong>30-45 minutes</strong></p>
+                    <div class="delivery-progress">
+                        <div class="progress-bar" style="width: 25%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div th:unless="${order}">
-        <p class="alert alert-warning">Order details could not be loaded.</p>
-        <a th:href="@{/}" class="btn btn-primary">Go to Homepage</a>
+
+    <!-- No Order Found -->
+    <div th:unless="${order}" class="no-order animate__animated animate__fadeIn">
+        <div class="no-order-icon">
+            <i class="fas fa-exclamation-circle"></i>
+        </div>
+        <h2>Order Not Found</h2>
+        <p>We couldn't retrieve your order details. Please check your order history or contact support.</p>
+        <div class="no-order-actions">
+            <a th:href="@{/}" class="btn btn-primary-orange">
+                <i class="fas fa-home me-2"></i> Go to Homepage
+            </a>
+            <a th:href="@{/orders/history}" class="btn btn-outline-orange">
+                <i class="fas fa-history me-2"></i> View Order History
+            </a>
+        </div>
     </div>
 </div>
+<!-- Inject Footer Fragment -->
+<div th:replace="~{fragments/footer :: mainFooter}"></div>
 
+<!-- Back to Top Button -->
+<a href="#" class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+</a>
+
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+<script>
+    $(document).ready(function() {
+        // Animate elements sequentially
+        $('.animate__animated').each(function(index) {
+            $(this).css('animation-delay', (index * 0.1) + 's');
+        });
+
+        // Simulate order progress (for demo purposes)
+        function updateProgress() {
+            const progress = $('.progress-bar');
+            let width = 25;
+            const interval = setInterval(() => {
+                width += 1;
+                progress.css('width', width + '%');
+                if (width >= 100) clearInterval(interval);
+            }, 3000);
+        }
+
+        setTimeout(updateProgress, 2000);
+    });
+</script>
 </body>
 </html>

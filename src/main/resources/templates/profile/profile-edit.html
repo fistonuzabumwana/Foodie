@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Profile - Foodie</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/profile-edit.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fredoka+One&display=swap" rel="stylesheet">
+
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/footer.css}"/>
+
+    <link rel="stylesheet" th:href="@{/css/landing-light.css}" />
+    <link rel="stylesheet" th:href="@{/css/Navbar.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<!-- Floating background elements -->
+<div class="profile-edit-bg-elements">
+    <div class="bg-circle-orange"></div>
+    <div class="bg-circle-white"></div>
+    <div class="floating-food floating-edit"></div>
+</div>
+
+<div class="container profile-edit-container">
+    <div class="profile-edit-card animate__animated animate__fadeIn">
+        <!-- Header -->
+        <div class="profile-edit-header">
+            <h1><i class="fas fa-user-edit me-2"></i> Edit Profile</h1>
+            <p>Update your personal information and preferences</p>
+        </div>
+
+        <!-- Error Message -->
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <!-- Edit Form -->
+        <form th:action="@{/profile/edit}" th:object="${userProfileDto}" method="post" enctype="multipart/form-data" class="profile-edit-form">
+            <!-- Profile Picture -->
+            <div class="profile-picture-section">
+                <div class="avatar-upload">
+                    <div class="avatar-preview">
+                        <img th:if="${currentProfilePictureFileId != null}"
+                             th:src="@{/profile/picture/__${userId}__}"
+                             alt="Current Profile Picture"
+                             class="profile-picture-preview" />
+                        <img th:unless="${currentProfilePictureFileId != null}"
+                             th:src="@{/images/default-avatar.png}"
+                             alt="Default Avatar"
+                             class="profile-picture-preview" />
+                        <div class="avatar-edit">
+                            <input type="file" id="profilePictureFile" name="profilePictureFile" accept=".png, .jpg, .jpeg" />
+                            <label for="profilePictureFile"><i class="fas fa-camera"></i></label>
+                        </div>
+                    </div>
+                    <div class="avatar-instructions">
+                        <p>Click the camera icon to change your profile picture</p>
+                        <small>JPG or PNG, max 2MB</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Personal Info -->
+            <div class="form-section">
+                <h3><i class="fas fa-user-circle me-2"></i> Personal Information</h3>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="firstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="firstName" th:field="*{firstName}" placeholder="Enter your first name">
+                        <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="invalid-feedback">Error</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="lastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" th:field="*{lastName}" placeholder="Enter your last name">
+                        <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="invalid-feedback">Error</div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                        <input type="tel" class="form-control" id="phone" th:field="*{phone}" placeholder="Enter your phone number">
+                    </div>
+                    <div th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="invalid-feedback">Error</div>
+                </div>
+            </div>
+
+            <!-- Address -->
+            <div class="form-section">
+                <h3><i class="fas fa-map-marker-alt me-2"></i> Delivery Address</h3>
+                <div class="mb-3">
+                    <label for="streetAddress" class="form-label">Street Address</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-road"></i></span>
+                        <input type="text" class="form-control" id="streetAddress" th:field="*{address.streetAddress}" placeholder="Enter your street address">
+                    </div>
+                    <div th:if="${#fields.hasErrors('address.streetAddress')}" th:errors="*{address.streetAddress}" class="invalid-feedback">Error</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="sector" class="form-label">Sector</label>
+                        <input type="text" class="form-control" id="sector" th:field="*{address.sector}" placeholder="Enter your sector">
+                        <div th:if="${#fields.hasErrors('address.sector')}" th:errors="*{address.sector}" class="invalid-feedback">Error</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="district" class="form-label">District</label>
+                        <input type="text" class="form-control" id="district" th:field="*{address.district}" placeholder="Enter your district">
+                        <div th:if="${#fields.hasErrors('address.district')}" th:errors="*{address.district}" class="invalid-feedback">Error</div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="country" class="form-label">Country</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-globe"></i></span>
+                        <input type="text" class="form-control" id="country" th:field="*{address.country}" value="Rwanda" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-save">
+                    <i class="fas fa-save me-2"></i> Save Changes
+                </button>
+                <a th:href="@{/profile}" class="btn btn-cancel">
+                    <i class="fas fa-times me-2"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Inject Footer Fragment -->
+<div th:replace="~{fragments/footer :: mainFooter}"></div>
+
+<!-- Back to Top Button -->
+<a href="#" class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+</a>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+<script>
+    $(document).ready(function() {
+        // Preview profile picture before upload
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    $('.profile-picture-preview').attr('src', e.target.result);
+                    $('.profile-picture-preview').addClass('animate__animated animate__pulse');
+                    setTimeout(() => {
+                        $('.profile-picture-preview').removeClass('animate__animated animate__pulse');
+                    }, 1000);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#profilePictureFile").change(function() {
+            readURL(this);
+        });
+
+        // Add animation to form sections
+        $('.form-section').each(function(index) {
+            $(this).css('animation-delay', (index * 0.1) + 's');
+        });
+
+        // Form submission animation
+        $('.profile-edit-form').submit(function() {
+            $('.btn-save').html('<i class="fas fa-spinner fa-spin me-2"></i> Saving...');
+        });
+    });
+</script>
+</body>
+</html>

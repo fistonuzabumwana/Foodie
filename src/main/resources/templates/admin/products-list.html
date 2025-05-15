@@ -1,52 +1,260 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/admin-layout}"> <head>
-    <title>Admin - Product Management</title>
+      layout:decorate="~{layouts/admin-layout}">
+<head>
+    <title>Product Management - Admin Dashboard</title>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
-    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/admin-products.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fredoka+One&display=swap" rel="stylesheet">
+
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/footer.css}"/>
+
+    <link rel="stylesheet" th:href="@{/css/landing-light.css}" />
+    <link rel="stylesheet" th:href="@{/css/Navbar.css}">
 </head>
 <body>
 <div th:replace="~{fragments/navbar :: mainNavbar}"></div>
 
-<section layout:fragment="content"> <div class="container mt-4">
-    <h2>Product Management</h2>
-    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
-    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
-
-    <p><a th:href="@{/admin/products/add}" class="btn btn-primary mb-3">Add New Product</a></p>
-
-    <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Stock</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="product : ${products}">
-            <td th:text="${product.id}">1</td>
-            <td th:text="${product.name}">Product Name</td>
-            <td th:text="${#numbers.formatCurrency(product.price)}">$0.00</td>
-            <td th:text="${product.stockQuantity}">0</td>
-            <td>
-                <a th:href="@{/admin/products/edit/{id}(id=${product.id})}" class="btn btn-sm btn-info">Edit</a>
-                <a th:href="@{/admin/products/delete/{id}(id=${product.id})}"
-                   class="btn btn-sm btn-danger"
-                   onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
-            </td>
-        </tr>
-        <tr th:if="${#lists.isEmpty(products)}">
-            <td colspan="5" class="text-center">No products found.</td>
-        </tr>
-        </tbody>
-    </table>
+<!-- Floating background elements -->
+<div class="admin-bg-elements">
+    <div class="bg-circle-orange"></div>
+    <div class="bg-circle-white"></div>
+    <div class="floating-food floating-ingredients"></div>
 </div>
-</section>
-<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
 
+<section layout:fragment="content">
+    <div class="container admin-products-container">
+        <!-- Page Header -->
+        <div class="admin-header animate__animated animate__fadeIn">
+            <div class="header-content">
+                <h1><i class="fas fa-utensils me-2"></i> Product Management</h1>
+                <p>Manage your restaurant's menu items and inventory</p>
+            </div>
+            <a th:href="@{/admin/products/add}" class="btn btn-add-product">
+                <i class="fas fa-plus me-2"></i> Add New Product
+            </a>
+        </div>
+
+        <!-- Messages -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <!-- Product Controls -->
+        <div class="product-controls animate__animated animate__fadeIn">
+            <div class="search-filter">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search products..." class="search-input">
+                </div>
+                <div class="filter-group">
+                    <label for="categoryFilter"><i class="fas fa-filter me-2"></i>Category:</label>
+                    <select id="categoryFilter" class="form-select">
+                        <option value="all">All Categories</option>
+                        <option value="burgers">Burgers</option>
+                        <option value="pizza">Pizza</option>
+                        <option value="pasta">Pasta</option>
+                        <option value="drinks">Drinks</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="statusFilter"><i class="fas fa-circle me-2"></i>Status:</label>
+                    <select id="statusFilter" class="form-select">
+                        <option value="all">All Statuses</option>
+                        <option value="active">Active</option>
+                        <option value="out-of-stock">Out of Stock</option>
+                        <option value="disabled">Disabled</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="products-grid">
+            <div th:each="product : ${products}" class="product-card animate__animated animate__fadeInUp">
+                <div class="product-image">
+                    <img th:src="${product.imageUrl ?: '/images/default-food.png'}"
+                         alt="Product Image"
+                         class="img-fluid" />
+                    <div class="product-status" th:classappend="${product.stockQuantity == 0} ? 'out-of-stock' : 'in-stock'"
+                         th:text="${product.stockQuantity == 0} ? 'OUT OF STOCK' : 'IN STOCK'">
+                        IN STOCK
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name" th:text="${product.name}">Product Name</h3>
+                    <p class="product-description" th:text="${#strings.abbreviate(product.description, 80)}">Product description...</p>
+
+                    <div class="product-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-tag"></i>
+                            <span th:text="${product.category ?: 'Uncategorized'}">Category</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-box"></i>
+                            <span th:text="${product.stockQuantity} + ' in stock'">0 in stock</span>
+                        </div>
+                    </div>
+
+                    <div class="product-footer">
+                        <div class="product-price" th:text="${#numbers.formatCurrency(product.price)}">$0.00</div>
+                        <div class="product-actions">
+                            <a th:href="@{/admin/products/edit/{id}(id=${product.id})}" class="btn-edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a th:href="@{/admin/products/delete/{id}(id=${product.id})}"
+                               class="btn-delete"
+                               onclick="return confirmDelete(this);">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                            <div class="toggle-switch">
+                                <input type="checkbox" th:id="${'toggle-' + product.id}"
+                                       th:checked="${product.active}" class="toggle-input">
+                                <label th:for="${'toggle-' + product.id}" class="toggle-label"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div th:if="${#lists.isEmpty(products)}" class="empty-products animate__animated animate__fadeIn">
+                <div class="empty-icon">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <h3>No Products Found</h3>
+                <p>You haven't added any products yet. Let's create your first menu item!</p>
+                <a th:href="@{/admin/products/add}" class="btn btn-add-product">
+                    <i class="fas fa-plus me-2"></i> Add Product
+                </a>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="products-pagination animate__animated animate__fadeIn">
+            <nav aria-label="Products pagination">
+                <ul class="pagination">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<!-- Inject Footer Fragment -->
+<div th:replace="~{fragments/footer :: mainFooter}"></div>
+
+<!-- Back to Top Button -->
+<a href="#" class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+</a>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+<script>
+    $(document).ready(function() {
+        // Delete confirmation with animation
+        function confirmDelete(link) {
+            if (confirm('Are you sure you want to delete this product?')) {
+                $(link).closest('.product-card').addClass('animate__animated animate__fadeOut');
+                setTimeout(() => {
+                    window.location.href = link.href;
+                }, 500);
+                return false;
+            }
+            return false;
+        }
+
+        // Toggle product status
+        $('.toggle-input').change(function() {
+            const productId = $(this).attr('id').replace('toggle-', '');
+            const isActive = $(this).is(':checked');
+
+            // Here you would typically make an AJAX call to update the status
+            console.log(`Product ${productId} status set to: ${isActive ? 'ACTIVE' : 'INACTIVE'}`);
+
+            // Show loading feedback
+            const $label = $(this).next('.toggle-label');
+            $label.addClass('processing');
+            setTimeout(() => {
+                $label.removeClass('processing');
+            }, 1000);
+        });
+
+        // Filter products
+        $('#categoryFilter, #statusFilter').change(function() {
+            const category = $('#categoryFilter').val();
+            const status = $('#statusFilter').val();
+
+            $('.product-card').each(function() {
+                const $card = $(this);
+                const cardCategory = $card.find('.meta-item:first span').text().toLowerCase();
+                const cardStatus = $card.find('.product-status').text().toLowerCase().replace(' ', '-');
+
+                const categoryMatch = category === 'all' || cardCategory.includes(category);
+                const statusMatch = status === 'all' || cardStatus === status;
+
+                if (categoryMatch && statusMatch) {
+                    $card.show();
+                } else {
+                    $card.hide();
+                }
+            });
+        });
+
+        // Search functionality
+        $('.search-input').on('input', function() {
+            const searchTerm = $(this).val().toLowerCase();
+
+            $('.product-card').each(function() {
+                const productName = $(this).find('.product-name').text().toLowerCase();
+                const productDesc = $(this).find('.product-description').text().toLowerCase();
+
+                if (productName.includes(searchTerm) || productDesc.includes(searchTerm)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+
+        // Animate items when they appear
+        $('.product-card').each(function(index) {
+            $(this).css('animation-delay', (index * 0.1) + 's');
+        });
+    });
+</script>
 </body>
 </html>

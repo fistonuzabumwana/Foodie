@@ -1,0 +1,187 @@
+:root {
+    --primary: #FF5000;
+    --primary-light: rgba(255, 80, 0, 0.1);
+    --white: #ffffff;
+    --light: #f8f9fa;
+    --light-gray: #e9ecef;
+    --medium-gray: #ced4da;
+    --dark-gray: #6c757d;
+    --dark: #343a40;
+    --border-radius: 12px;
+    --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    --transition: all 0.3s ease;
+}
+
+/* Navbar Styles */
+.foodie-navbar {
+    background-color: var(--white) !important;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+    padding: 0.8rem 1rem;
+    transition: var(--transition);
+}
+
+.foodie-navbar.scrolled {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.8rem;
+    color: var(--primary) !important;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-brand::before {
+    content: "";
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-image: url('../images/LOGOT.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-right: 0.5rem;
+}
+
+.nav-link {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    color: var(--dark) !important;
+    padding: 0.5rem 1rem !important;
+    margin: 0 0.25rem;
+    position: relative;
+    transition: var(--transition);
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    color: var(--primary) !important;
+}
+
+.nav-link.active {
+    color: var(--primary) !important;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 1rem;
+    width: calc(100% - 2rem);
+    height: 2px;
+    background-color: var(--primary);
+    transform: scaleX(0);
+    transition: var(--transition);
+    transform-origin: center;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    transform: scaleX(1);
+}
+
+/* Cart Badge */
+.cart-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: var(--primary);
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: bold;
+}
+
+/* Dropdown Styles */
+.dropdown-menu {
+    border: none;
+    box-shadow: var(--box-shadow);
+    border-radius: var(--border-radius);
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1.5rem;
+    transition: var(--transition);
+}
+
+.dropdown-item:hover {
+    background-color: var(--primary-light);
+    color: var(--primary);
+}
+
+.dropdown-divider {
+    border-color: var(--light-gray);
+}
+
+/* User Welcome */
+.welcome-text {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+/* Auth Buttons */
+.auth-btn {
+    border-radius: var(--border-radius);
+    padding: 0.5rem 1.25rem !important;
+    margin-left: 0.5rem;
+    transition: var(--transition);
+}
+
+.login-btn {
+    border: 2px solid var(--primary);
+    color: var(--primary) !important;
+}
+
+.login-btn:hover {
+    background-color: var(--primary-light);
+}
+
+.register-btn {
+    background-color: var(--primary);
+    color: white !important;
+}
+
+.register-btn:hover {
+    background-color: #e04800;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(255, 80, 0, 0.2);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 991.98px) {
+    .navbar-collapse {
+        padding: 1rem 0;
+        background-color: var(--white);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        margin-top: 1rem;
+    }
+
+    .nav-link {
+        padding: 0.75rem 1.5rem !important;
+        margin: 0.25rem 0;
+    }
+
+    .nav-link::after {
+        display: none;
+    }
+
+    .auth-btn {
+        margin: 0.5rem 1.5rem;
+        width: calc(100% - 3rem);
+        text-align: center;
+    }
+}

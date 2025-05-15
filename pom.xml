@@ -26,6 +26,14 @@
 		<tag/>
 		<url/>
 	</scm>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>central</id>
+			<name>Central Repository</name>
+			<url>https://repo.maven.apache.org/maven2</url>
+		</pluginRepository>
+	</pluginRepositories>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -60,6 +68,11 @@
 			<artifactId>bootstrap</artifactId>
 			<version>5.3.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-mongodb</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -113,6 +126,27 @@
 						</exclude>
 					</excludes>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>com.github.warmuuh</groupId>
+				<artifactId>libsass-maven-plugin</artifactId>
+				<version>0.2.10-libsass_3.5.3</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+						<configuration>
+							<inputPath>${project.basedir}/src/main/resources/scss</inputPath>
+							<outputPath>${project.basedir}/src/main/resources/static/css</outputPath>
+							<includePath>${project.basedir}/src/main/resources/scss</includePath>
+							<generateSourceComments>false</generateSourceComments>
+							<generateSourceMap>false</generateSourceMap>
+							<outputStyle>compressed</outputStyle>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

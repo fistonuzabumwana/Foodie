@@ -1,34 +1,120 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Foodie</title>
+
+    <!-- Bootstrap 5 -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
-    <link rel="stylesheet" th:href="@{/css/style.css}"/>
-    <link rel="stylesheet" th:href="@{/css/style.css}"/> </head>
-<body>
-<div class="container">
-    <h2>Login to Foodie</h2>
-    <div th:if="${param.error}" class="alert alert-danger">
-        Invalid username or password.
-    </div>
-    <div th:if="${param.logout}" class="alert alert-success">
-        You have been logged out.
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/auth.css}" />
+</head>
+<body class="auth-page">
+<!-- Animated Background Elements -->
+<div class="bg-shapes">
+    <div class="shape orange"></div>
+    <div class="shape white"></div>
+    <div class="floating-food burger"></div>
+    <div class="floating-food pizza"></div>
+</div>
+
+<!-- Main Login Container -->
+<div class="auth-container">
+    <!-- Left Side - Branding -->
+    <div class="auth-branding">
+        <div class="brand-content">
+            <h1>Welcome back to <span class="foodie-logo">FOODIE</span></h1>
+            <p>Login to access your favorite restaurants and exclusive deals</p>
+            <div class="brand-image">
+                <img th:src="@{/images/Mobilelogin-amico.svg}" alt="Food Delivery" class="img-fluid">
+            </div>
+        </div>
     </div>
 
-    <form th:action="@{/perform_login}" method="post">
-        <div>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required autofocus />
+    <!-- Right Side - Login Form -->
+    <div class="auth-form">
+        <div class="form-container">
+            <div class="form-header">
+                <h2>Sign In</h2>
+                <p>Enter your credentials to continue</p>
+            </div>
+
+            <!-- Alert Messages -->
+            <div th:if="${param.error}" class="alert alert-danger fade-in">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                Invalid username or password.
+            </div>
+            <div th:if="${param.logout}" class="alert alert-success fade-in">
+                <i class="fas fa-check-circle me-2"></i>
+                You have been logged out.
+            </div>
+
+            <!-- Login Form -->
+            <form th:action="@{/perform_login}" method="post" class="login-form">
+                <div class="form-group floating-input">
+                    <input type="text" id="username" name="username" required autofocus />
+                    <label for="username">Username or Email</label>
+                    <i class="fas fa-user input-icon"></i>
+                </div>
+
+                <div class="form-group floating-input">
+                    <input type="password" id="password" name="password" required />
+                    <label for="password">Password</label>
+                    <i class="fas fa-lock input-icon"></i>
+                    <button type="button" class="password-toggle">
+                        <i class="far fa-eye"></i>
+                    </button>
+                </div>
+
+                <div class="form-options">
+                    <div class="form-check">
+                        <input type="checkbox" id="remember-me" class="form-check-input">
+                        <label for="remember-me" class="form-check-label">Remember me</label>
+                    </div>
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-login">
+                    <span class="btn-text">Log In</span>
+                    <i class="fas fa-arrow-right btn-icon"></i>
+                </button>
+
+                <div class="social-login">
+                    <p class="divider">or continue with</p>
+                    <div class="social-buttons">
+                        <button type="button" class="btn btn-social google">
+                            <i class="fab fa-google"></i>
+                        </button>
+                        <button type="button" class="btn btn-social facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </button>
+                        <button type="button" class="btn btn-social apple">
+                            <i class="fab fa-apple"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <p class="auth-redirect">
+                    New to Foodie? <a th:href="@{/register}" class="register-link">Create an account</a>
+                </p>
+            </form>
         </div>
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required />
-        </div>
-        <div>
-            <button type="submit">Log in</button>
-        </div>
-    </form>
-    <p>New user? <a th:href="@{/register}">Register here</a></p>
+    </div>
 </div>
+
+<!-- jQuery & Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Custom JS -->
+<script th:src="@{/js/auth.js}"></script>
 </body>
 </html>

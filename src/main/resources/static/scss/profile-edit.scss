@@ -1,0 +1,292 @@
+// Variables
+$primary: #FF5000;
+$primary-light: rgba(255, 80, 0, 0.1);
+$white: #ffffff;
+$light: #f8f9fa;
+$dark: #343a40;
+$border-radius: 12px;
+$transition: all 0.3s ease;
+
+// Background Elements
+.profile-edit-bg-elements {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+
+  .bg-circle-orange {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background-color: $primary-light;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.3;
+    top: -200px;
+    left: -200px;
+    animation: float 8s ease-in-out infinite;
+  }
+
+  .bg-circle-white {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background-color: $white;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.3;
+    bottom: -150px;
+    right: -150px;
+    animation: float 10s ease-in-out infinite reverse;
+  }
+
+  .floating-food {
+    position: absolute;
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.05;
+    z-index: 1;
+  }
+
+  .floating-edit {
+    width: 180px;
+    height: 180px;
+    background-image: url('../images/edit-icon.png');
+    top: 20%;
+    right: 10%;
+    animation: float 6s ease-in-out infinite;
+  }
+}
+
+.profile-edit-container {
+  padding: 2rem 0 4rem;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.profile-edit-card {
+  background: $white;
+  border-radius: $border-radius;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 800px;
+
+  .profile-edit-header {
+    text-align: center;
+    margin-bottom: 2rem;
+
+    h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2rem;
+      color: $dark;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    p {
+      color: lighten($dark, 30%);
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Profile Picture Section
+.profile-picture-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+
+  .avatar-upload {
+    text-align: center;
+
+    .avatar-preview {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 1rem;
+
+      .profile-picture-preview {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid $white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      }
+
+      .avatar-edit {
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        z-index: 1;
+
+        input {
+          display: none;
+        }
+
+        label {
+          display: inline-block;
+          width: 40px;
+          height: 40px;
+          background: $primary;
+          color: $white;
+          border-radius: 50%;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+          transition: $transition;
+
+          &:hover {
+            background: darken($primary, 10%);
+            transform: scale(1.1);
+          }
+        }
+      }
+    }
+
+    .avatar-instructions {
+      p {
+        margin-bottom: 0.25rem;
+        font-weight: 500;
+      }
+
+      small {
+        color: lighten($dark, 40%);
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+// Form Sections
+.form-section {
+  background: $light;
+  border-radius: $border-radius;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  opacity: 0; // For animation
+
+  h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    color: $dark;
+    display: flex;
+    align-items: center;
+  }
+}
+
+// Form Controls
+.form-control {
+  border: 2px solid $primary-light;
+  border-radius: $border-radius;
+  padding: 0.75rem 1rem;
+  transition: $transition;
+
+  &:focus {
+    border-color: $primary;
+    box-shadow: 0 0 0 3px rgba(255, 80, 0, 0.2);
+  }
+}
+
+.input-group-text {
+  background: $primary-light;
+  border: 2px solid $primary-light;
+  color: $primary;
+}
+
+.invalid-feedback {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.is-invalid {
+  border-color: #dc3545 !important;
+
+  &:focus {
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.25) !important;
+  }
+}
+
+// Form Actions
+.form-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+
+  .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: $border-radius;
+    font-weight: 600;
+    transition: $transition;
+    display: flex;
+    align-items: center;
+  }
+
+  .btn-save {
+    background: $primary;
+    color: $white;
+    border: none;
+
+    &:hover {
+      background: darken($primary, 10%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(255, 80, 0, 0.3);
+    }
+  }
+
+  .btn-cancel {
+    color: $dark;
+    background: transparent;
+    border: 2px solid $primary-light;
+
+    &:hover {
+      background: $primary-light;
+      border-color: $primary;
+    }
+  }
+}
+
+// Animations
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .profile-edit-card {
+    padding: 1.5rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+
+    .btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .profile-edit-header {
+    h1 {
+      font-size: 1.75rem;
+    }
+  }
+}

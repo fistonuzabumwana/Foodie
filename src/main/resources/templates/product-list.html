@@ -1,62 +1,142 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/main-layout}"> <head>
-    <title>Our Products - Foodie</title>
+      layout:decorate="~{layouts/main-layout}">
+<head>
+    <title>Our Menu - Foodie</title>
+    <link rel="stylesheet" th:href="@{/css/menu.css}" />
+    <!-- Bootstrap 5 -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
-    <link rel="stylesheet" th:href="@{/css/style.css}"/>
-    <style>
-        /* Basic styling for product cards */
-        .product-card {
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            overflow: hidden; /* Ensures image corners are rounded if image is direct child */
-        }
-        .product-card img {
-            width: 100%;
-            height: 200px; /* Fixed height for uniformity */
-            object-fit: cover; /* Scales image nicely */
-        }
-        .product-card .card-body {
-            padding: 15px;
-        }
-        .product-card .card-title {
-            font-size: 1.25rem;
-            font-weight: bold;
-        }
-    </style>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fredoka+One&display=swap" rel="stylesheet">
+
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/footer.css}"/>
+    <link rel="stylesheet" th:href="@{/css/landing-light.css}" />
+
+    <link rel="stylesheet" th:href="@{/css/Navbar.css}">
 </head>
 <body>
 <div th:replace="~{fragments/navbar :: mainNavbar}"></div>
 
-<section layout:fragment="content"> <div class="container mt-4">
-    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
-    <h1 class="mb-4 text-center">Explore Our Menu</h1>
+<section layout:fragment="content">
+    <!-- Floating background elements -->
+    <div class="menu-bg-elements">
+        <div class="bg-circle-orange"></div>
+        <div class="bg-circle-white"></div>
+        <div class="floating-food floating-burger"></div>
+        <div class="floating-food floating-pizza"></div>
+    </div>
 
-    <div class="row">
-        <div th:if="${#lists.isEmpty(products)}" class="col">
-            <p class="text-center">No delicious items available at the moment. Please check back soon!</p>
+    <div class="container menu-container">
+        <!-- Category Filter -->
+        <div class="category-filter animate__animated animate__fadeIn">
+            <div class="category-scroller">
+                <button class="category-btn active" data-category="all">All Items</button>
+                <button class="category-btn" data-category="burgers">Burgers</button>
+                <button class="category-btn" data-category="pizza">Pizza</button>
+                <button class="category-btn" data-category="pasta">Pasta</button>
+                <button class="category-btn" data-category="salads">Salads</button>
+                <button class="category-btn" data-category="desserts">Desserts</button>
+                <button class="category-btn" data-category="drinks">Drinks</button>
+            </div>
         </div>
-        <div th:each="product : ${products}" class="col-md-4 col-sm-6">
-            <div class="card product-card shadow-sm">
-                <img th:src="${product.imageUrl ?: '/images/default-food.png'}" class="card-img-top" th:alt="${product.name}" />
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${product.name}">Product Name</h5>
-                    <p class="card-text" th:text="${#strings.abbreviate(product.description, 80)}">Short description...</p>
-                    <p class="card-text fs-5 fw-bold" th:text="${#numbers.formatCurrency(product.price)}">$0.00</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <a th:href="@{/products/view/{id}(id=${product.id})}" class="btn btn-outline-primary btn-sm">View Details</a>
-                        <form th:action="@{/cart/add/{productId}(productId=${product.id})}" method="post" style="display: inline;">
-                            <input type="hidden" name="quantity" value="1" /> <button type="submit" class="btn btn-primary btn-sm">Add to Cart</button>
-                        </form>
+
+        <!-- Search and Sort -->
+        <div class="menu-controls animate__animated animate__fadeIn animate__delay-1s">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search menu items..." class="search-input">
+            </div>
+            <div class="sort-options">
+                <select class="form-select">
+                    <option>Sort by: Popular</option>
+                    <option>Price: Low to High</option>
+                    <option>Price: High to Low</option>
+                    <option>Alphabetical</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div th:if="${#lists.isEmpty(products)}" class="empty-state animate__animated animate__fadeIn">
+            <img th:src="@{/images/empty-plate.svg}" alt="Empty plate" class="empty-img">
+            <h3>Our kitchen is currently empty</h3>
+            <p>No delicious items available at the moment. Please check back soon!</p>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="product-grid">
+            <div th:each="product : ${products}" class="product-card">
+                <div class="card-inner">
+                    <!-- Favorite Button -->
+                    <button class="favorite-btn">
+                        <i class="far fa-heart"></i>
+                    </button>
+
+                    <!-- Product Image -->
+                    <div class="product-img-container">
+                        <img th:src="${product.imageUrl ?: '/images/default-food.png'}"
+                             class="product-img"
+                             th:alt="${product.name}"
+                             loading="lazy">
+                        <div class="img-overlay"></div>
+                    </div>
+
+                    <!-- Product Info -->
+                    <div class="product-info">
+                        <div class="product-header">
+                            <h3 class="product-title" th:text="${product.name}">Product Name</h3>
+                            <div class="product-price" th:text="${#numbers.formatCurrency(product.price)}">$0.00</div>
+                        </div>
+                        <p class="product-desc" th:text="${#strings.abbreviate(product.description, 100)}">Short description...</p>
+
+                        <!-- Rating -->
+                        <div class="product-rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="rating-count">(24)</span>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="product-actions">
+                            <a th:href="@{/products/view/{id}(id=${product.id})}"
+                               class="btn-details">
+                                View Details <i class="fas fa-arrow-right"></i>
+                            </a>
+                            <form th:action="@{/cart/add/{productId}(productId=${product.id})}" method="post">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="btn-add-to-cart">
+                                    <i class="fas fa-plus"></i> Add
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-</section>
+</section><!-- Inject Footer Fragment -->
+<div th:replace="~{fragments/footer :: mainFooter}"></div>
+
+<!-- Back to Top Button -->
+<a href="#" class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+</a>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/menu.js}"></script>
 </body>
 </html>

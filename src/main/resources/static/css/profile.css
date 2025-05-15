@@ -1,0 +1,481 @@
+.profile-bg-elements {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+.profile-bg-elements .bg-circle-orange {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background-color: rgba(255, 80, 0, 0.1);
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.3;
+  top: -200px;
+  left: -200px;
+  animation: float 8s ease-in-out infinite;
+}
+.profile-bg-elements .bg-circle-white {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.3;
+  bottom: -150px;
+  right: -150px;
+  animation: float 10s ease-in-out infinite reverse;
+}
+.profile-bg-elements .floating-food {
+  position: absolute;
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.05;
+  z-index: 1;
+}
+.profile-bg-elements .floating-avatar {
+  width: 180px;
+  height: 180px;
+  background-image: url("../images/avatar-icon.png");
+  top: 20%;
+  right: 10%;
+  animation: float 6s ease-in-out infinite;
+}
+
+.profile-container {
+  padding: 2rem 0 4rem;
+  position: relative;
+}
+
+.profile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+.profile-header .profile-avatar {
+  margin-bottom: 1.5rem;
+}
+.profile-header .profile-avatar .avatar-wrapper {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 1rem;
+}
+.profile-header .profile-avatar .avatar-wrapper .profile-picture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid #ffffff;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+.profile-header .profile-avatar .avatar-wrapper .avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+.profile-header .profile-avatar .avatar-wrapper .avatar-overlay .btn-change-avatar {
+  color: #ffffff;
+  font-size: 1.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+.profile-header .profile-avatar .avatar-wrapper:hover .avatar-overlay {
+  opacity: 1;
+}
+.profile-header .profile-avatar .profile-username {
+  font-family: "Fredoka One", cursive;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #343a40;
+}
+.profile-header .profile-avatar .member-since {
+  color: rgb(122.0344827586, 134.5, 146.9655172414);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.profile-header .profile-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.profile-header .profile-actions .btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+.profile-header .profile-actions .btn-edit-profile {
+  background: #FF5000;
+  color: #ffffff;
+  border: none;
+}
+.profile-header .profile-actions .btn-edit-profile:hover {
+  background: #cc4000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 80, 0, 0.3);
+}
+.profile-header .profile-actions .btn-order-history {
+  color: #FF5000;
+  background: transparent;
+  border: 2px solid rgba(255, 80, 0, 0.1);
+}
+.profile-header .profile-actions .btn-order-history:hover {
+  background: rgba(255, 80, 0, 0.1);
+  border-color: #FF5000;
+}
+
+.profile-sections {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.profile-section {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.profile-section .section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.profile-section .section-header .section-icon {
+  font-size: 1.5rem;
+  color: #FF5000;
+  margin-right: 1rem;
+}
+.profile-section .section-header h2 {
+  font-size: 1.5rem;
+  margin: 0;
+  flex: 1;
+}
+.profile-section .section-header .section-action {
+  color: #FF5000;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+.profile-section .section-header .section-action:hover {
+  text-decoration: underline;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+.info-grid .info-item .info-label {
+  font-weight: 500;
+  color: rgb(97.724137931, 109, 120.275862069);
+  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.info-grid .info-item .info-value {
+  font-size: 1.1rem;
+  padding-left: 1.75rem;
+}
+
+.address-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+.address-card .address-details {
+  flex: 1;
+}
+.address-card .address-details .address-line {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+.address-card .address-details .address-line i {
+  color: #FF5000;
+  width: 20px;
+  text-align: center;
+}
+.address-card .btn-edit-address {
+  color: #FF5000;
+  background: transparent;
+  border: none;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+.address-card .btn-edit-address:hover {
+  color: #cc4000;
+}
+
+.preferences-grid .preference-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+.preferences-grid .preference-item:last-child {
+  border-bottom: none;
+}
+.preferences-grid .preference-item .preference-icon {
+  font-size: 1.25rem;
+  color: #FF5000;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 80, 0, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+}
+.preferences-grid .preference-item .preference-info {
+  flex: 1;
+}
+.preferences-grid .preference-item .preference-info h4 {
+  font-size: 1.1rem;
+  margin: 0 0 0.25rem;
+}
+.preferences-grid .preference-item .preference-info p {
+  color: rgb(122.0344827586, 134.5, 146.9655172414);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.preferences-grid .preference-item .preference-toggle .switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+.preferences-grid .preference-item .preference-toggle .switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.preferences-grid .preference-item .preference-toggle .switch input:checked + .slider {
+  background-color: #FF5000;
+}
+.preferences-grid .preference-item .preference-toggle .switch input:focus + .slider {
+  box-shadow: 0 0 1px #FF5000;
+}
+.preferences-grid .preference-item .preference-toggle .switch .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: all 0.3s ease;
+  border-radius: 24px;
+}
+.preferences-grid .preference-item .preference-toggle .switch .slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+}
+.preferences-grid .preference-item .preference-toggle .switch input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.recent-orders .order-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  margin-bottom: 0.75rem;
+  transition: all 0.3s ease;
+}
+.recent-orders .order-card:hover {
+  background: rgb(242.05, 243.9, 245.75);
+}
+.recent-orders .order-card .order-date {
+  font-weight: 500;
+  min-width: 100px;
+}
+.recent-orders .order-card .order-details {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.recent-orders .order-card .order-details .order-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.recent-orders .order-card .order-details .order-status.processing {
+  background: #fff3cd;
+  color: #856404;
+}
+.recent-orders .order-card .order-details .order-status.delivered {
+  background: #d4edda;
+  color: #155724;
+}
+.recent-orders .order-card .order-details .order-status.cancelled {
+  background: #f8d7da;
+  color: #721c24;
+}
+.recent-orders .order-card .order-details .order-total {
+  font-weight: 600;
+}
+.recent-orders .order-card .order-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.recent-orders .order-card .order-actions .btn-order-details, .recent-orders .order-card .order-actions .btn-reorder {
+  padding: 0.5rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.recent-orders .order-card .order-actions .btn-order-details {
+  color: #FF5000;
+  background: transparent;
+  border: 1px solid rgba(255, 80, 0, 0.1);
+}
+.recent-orders .order-card .order-actions .btn-order-details:hover {
+  background: rgba(255, 80, 0, 0.1);
+}
+.recent-orders .order-card .order-actions .btn-reorder {
+  color: #ffffff;
+  background: #FF5000;
+  border: 1px solid #FF5000;
+}
+.recent-orders .order-card .order-actions .btn-reorder:hover {
+  background: #cc4000;
+}
+
+.no-orders {
+  text-align: center;
+  padding: 2rem;
+}
+.no-orders i {
+  font-size: 3rem;
+  color: rgb(178.3103448276, 185.5, 192.6896551724);
+  margin-bottom: 1rem;
+}
+.no-orders p {
+  color: rgb(122.0344827586, 134.5, 146.9655172414);
+  margin-bottom: 1.5rem;
+}
+
+.no-profile {
+  text-align: center;
+  padding: 4rem 0;
+  max-width: 500px;
+  margin: 0 auto;
+}
+.no-profile .no-profile-icon {
+  font-size: 5rem;
+  color: #ffc107;
+  margin-bottom: 1.5rem;
+}
+.no-profile h2 {
+  color: #343a40;
+  margin-bottom: 0.5rem;
+}
+.no-profile p {
+  color: rgb(122.0344827586, 134.5, 146.9655172414);
+  margin-bottom: 2rem;
+}
+
+.no-profile-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+@media (max-width: 768px) {
+  .profile-header .profile-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .profile-header .profile-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .address-card {
+    flex-direction: column;
+  }
+  .order-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .order-card .order-details {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .order-card .order-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+@media (max-width: 576px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+  .preference-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .preference-item .preference-toggle {
+    align-self: flex-end;
+  }
+}
+
+/*# sourceMappingURL=profile.css.map */

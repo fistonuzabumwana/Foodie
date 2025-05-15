@@ -20,6 +20,7 @@ public class CartItem {
     private BigDecimal price;
     @Setter
     private String imageUrl;
+    private String imageFileId;  // For backend use
     private int quantity;
     private BigDecimal subtotal;
 
@@ -27,7 +28,8 @@ public class CartItem {
         this.productId = product.getId();
         this.productName = product.getName();
         this.price = product.getPrice();
-        this.imageUrl = product.getImageUrl();
+        this.imageFileId = product.getImageFileId();
+        this.imageUrl = "/products/image/" + product.getId(); // Construct the URL
         this.quantity = quantity;
         this.subtotal = product.getPrice().multiply(BigDecimal.valueOf(quantity));
     }
@@ -38,8 +40,6 @@ public class CartItem {
             this.subtotal = this.price.multiply(BigDecimal.valueOf(this.quantity));
         }
     }
-
-    public void setSubtotal(BigDecimal subtotal) { this.subtotal = subtotal; }
 
     // You might want to update subtotal when quantity or price changes
     public void recalculateSubtotal() {

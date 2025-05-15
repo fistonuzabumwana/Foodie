@@ -10,7 +10,7 @@
 <section layout:fragment="content"> <div class="container mt-4">
     <h2 th:text="${pageTitle ?: 'Manage Product'}">Manage Product</h2>
 
-    <form th:action="@{/admin/products/save}" th:object="${product}" method="post">
+    <form th:action="@{/admin/products/save}" th:object="${product}" method="post" enctype="multipart/form-data">
         <input type="hidden" th:field="*{id}" /> <div class="form-group mb-3">
         <label for="name">Product Name:</label>
         <input type="text" id="name" th:field="*{name}" class="form-control" />
@@ -34,15 +34,29 @@
             <input type="number" id="stockQuantity" th:field="*{stockQuantity}" class="form-control" />
             <div th:if="${#fields.hasErrors('stockQuantity')}" th:errors="*{stockQuantity}" class="text-danger">Stock Error</div>
         </div>
-
-        <div class="form-group mb-3">
-            <label for="imageUrl">Image URL:</label>
-            <input type="text" id="imageUrl" th:field="*{imageUrl}" class="form-control" />
-            <div th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}" class="text-danger">Image URL Error</div>
+        <div class="mb-3">
+            <label for="category" class="form-label">Category:</label>
+            <input type="text" class="form-control" id="category" th:field="*{category}" />
+            <div th:if="${#fields.hasErrors('category')}" th:errors="*{category}" class="invalid-feedback">Category Error</div>
         </div>
+
+<!--        <div class="form-group mb-3">-->
+<!--            <label for="imageUrl">Image URL:</label>-->
+<!--            <input type="text" id="imageUrl" th:field="*{imageUrl}" class="form-control" />-->
+<!--            <div th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}" class="text-danger">Image URL Error</div>-->
+<!--        </div>-->
+        <div class="form-group mb-3">
+            <label for="image">Product Image:</label>
+            <input type="file" id="image" name="image" class="form-control" accept="image/*"/>
+            <small class="form-text text-muted">Upload a product image (JPEG, PNG, etc.)</small>
+            <!-- Show current image if editing -->
+            <div th:if="${product.imageFileId != null}">
+                <img th:src="@{'/products/image/' + ${product.id}}" style="max-height: 200px;" class="mt-2"/>
+            </div>
 
         <button type="submit" class="btn btn-success">Save Product</button>
         <a th:href="@{/admin/products}" class="btn btn-secondary">Cancel</a>
+        </div>
     </form>
 </div>
 </section>

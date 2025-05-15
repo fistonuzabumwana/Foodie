@@ -1,49 +1,212 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>My Order History - Foodie</title>
+    <title>Order History - Foodie</title>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
-    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/order-history.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fredoka+One&display=swap" rel="stylesheet">
+
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/footer.css}"/>
+
+    <link rel="stylesheet" th:href="@{/css/landing-light.css}" />
+    <link rel="stylesheet" th:href="@{/css/Navbar.css}">
 </head>
 <body>
-<div th:replace="~{fragments/navbar :: mainNavbar}"></div>  
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
 
-<div class="container mt-4">
-    <h2>My Order History</h2>
+<!-- Floating background elements -->
+<div class="history-bg-elements">
+    <div class="bg-circle-orange"></div>
+    <div class="bg-circle-white"></div>
+    <div class="floating-food floating-receipt"></div>
+</div>
 
-    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
-
-    <div th:if="${#lists.isEmpty(orders)}">
-        <p>You have not placed any orders yet.</p>
-        <a th:href="@{/products}" class="btn btn-primary">Start Shopping</a>
+<div class="container history-container">
+    <!-- Header -->
+    <div class="history-header animate__animated animate__fadeIn">
+        <h1><i class="fas fa-history me-2"></i> Order History</h1>
+        <p>Review your past orders and favorite meals</p>
     </div>
 
+    <!-- Empty State -->
+    <div th:if="${#lists.isEmpty(orders)}" class="empty-history animate__animated animate__fadeIn">
+        <div class="empty-icon">
+            <i class="fas fa-shopping-basket"></i>
+        </div>
+        <h3>No Orders Yet</h3>
+        <p>Your order history is empty. Let's find something delicious!</p>
+        <a th:href="@{/products}" class="btn btn-primary-orange">
+            <i class="fas fa-utensils me-2"></i> Explore Menu
+        </a>
+    </div>
+
+    <!-- Order History -->
     <div th:unless="${#lists.isEmpty(orders)}">
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th>Order ID</th>
-                <th>Date</th>
-                <th>Total Amount</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="order : ${orders}">
-                <td th:text="${order.id}">#123</td>
-                <td th:text="${#temporals.format(order.orderDate, 'dd-MMM-yyyy HH:mm')}">01-Jan-2024</td>
-                <td th:text="${#numbers.formatCurrency(order.totalAmount)}">$0.00</td>
-                <td><span class="badge bg-info text-dark" th:text="${order.status}">PENDING</span></td>
-                <td>
-                    <a th:href="@{/orders/confirmation/{orderId}(orderId=${order.id})}" class="btn btn-sm btn-outline-primary">View Details</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <!-- Filter Controls -->
+        <div class="history-filters animate__animated animate__fadeIn">
+            <div class="filter-group">
+                <label for="statusFilter"><i class="fas fa-filter me-2"></i>Filter by:</label>
+                <select id="statusFilter" class="form-select">
+                    <option value="all">All Orders</option>
+                    <option value="delivered">Delivered</option>
+                    <option value="processing">Processing</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="sortBy"><i class="fas fa-sort me-2"></i>Sort by:</label>
+                <select id="sortBy" class="form-select">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="price-high">Highest Price</option>
+                    <option value="price-low">Lowest Price</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Order Cards -->
+        <div class="order-list">
+            <div th:each="order : ${orders}" class="order-card animate__animated animate__fadeInUp"
+                 th:attr="data-status=${order.status.toLowerCase()}">
+                <div class="order-header">
+                    <div class="order-id">
+                        <i class="fas fa-receipt"></i>
+                        Order #<span th:text="${order.id}">123</span>
+                    </div>
+                    <div class="order-date" th:text="${#temporals.format(order.orderDate, 'EEEE, MMMM d, yyyy')}">
+                        Monday, January 1, 2024
+                    </div>
+                </div>
+
+                <div class="order-body">
+                    <div class="order-summary">
+                        <div class="order-items-preview">
+                            <div th:each="item,iter : ${order.orderItems}" th:if="${iter.index < 3}" class="item-preview">
+                                <img th:src="${item.product.imageUrl ?: '/images/default-food.png'}"
+                                     alt="Product Image"
+                                     class="item-image" />
+                                <span class="item-quantity" th:text="'×' + ${item.quantity}">×1</span>
+                            </div>
+                            <div th:if="${order.orderItems.size() > 3}" class="more-items">
+                                +<span th:text="${order.orderItems.size() - 3}">0</span> more
+                            </div>
+                        </div>
+                        <div class="order-total">
+                            <span>Total</span>
+                            <span class="total-amount" th:text="${#numbers.formatCurrency(order.totalAmount)}">$0.00</span>
+                        </div>
+                    </div>
+
+                    <div class="order-status">
+<!--                        <div class="status-badge" th:classappend="${order.status == 'DELIVERED'} ? 'delivered' :  ${order.status == 'CANCELLED'} ? 'cancelled' : 'processing'" th:text="${order.status}">PROCESSING</div>-->
+                        <div class="status-badge" th:classappend="${(order.status == 'DELIVERED') ? 'delivered' : ((order.status == 'CANCELLED') ? 'cancelled' : 'processing')}" th:text="${order.status}">PROCESSING</div>
+                        <div class="delivery-time" th:if="${order.status == 'DELIVERED'}" th:text="${#temporals.format(order.deliveryDate, 'h:mm a')} + ' delivery'"> 2:30 PM delivery</div>
+                    </div>
+                </div>
+
+                <div class="order-footer">
+                    <a th:href="@{/orders/confirmation/{orderId}(orderId=${order.id})}" class="btn-details">
+                        <i class="fas fa-eye me-1"></i> View Details
+                    </a>
+                    <a th:href="@{/orders/reorder/{orderId}(orderId=${order.id})}" class="btn-reorder">
+                        <i class="fas fa-redo me-1"></i> Reorder
+                    </a>
+                    <a th:if="${order.status == 'DELIVERED'}" href="#" class="btn-rate">
+                        <i class="fas fa-star me-1"></i> Rate Order
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="history-pagination animate__animated animate__fadeIn">
+            <nav aria-label="Order history pagination">
+                <ul class="pagination">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
 </div>
 
-<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+<!-- Inject Footer Fragment -->
+<div th:replace="~{fragments/footer :: mainFooter}"></div>
+
+<!-- Back to Top Button -->
+<a href="#" class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+</a>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script><script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+<script>
+    $(document).ready(function() {
+        // Filter orders
+        $('#statusFilter').change(function() {
+            const status = $(this).val();
+            $('.order-card').each(function() {
+                if (status === 'all' || $(this).data('status') === status) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+
+        // Sort orders
+        $('#sortBy').change(function() {
+            const sortBy = $(this).val();
+            const $container = $('.order-list');
+            const $items = $('.order-card');
+
+            $items.sort(function(a, b) {
+                if (sortBy === 'newest') {
+                    return new Date($(b).find('.order-date').text()) - new Date($(a).find('.order-date').text());
+                } else if (sortBy === 'oldest') {
+                    return new Date($(a).find('.order-date').text()) - new Date($(b).find('.order-date').text());
+                } else if (sortBy === 'price-high') {
+                    return parseFloat($(b).find('.total-amount').text().replace(/[^0-9.]/g, '')) -
+                        parseFloat($(a).find('.total-amount').text().replace(/[^0-9.]/g, ''));
+                } else if (sortBy === 'price-low') {
+                    return parseFloat($(a).find('.total-amount').text().replace(/[^0-9.]/g, '')) -
+                        parseFloat($(b).find('.total-amount').text().replace(/[^0-9.]/g, ''));
+                }
+                return 0;
+            });
+
+            $container.append($items);
+        });
+
+        // Animate items when they appear
+        $('.order-card').each(function(index) {
+            $(this).css('animation-delay', (index * 0.1) + 's');
+        });
+    });
+</script>
 </body>
 </html>

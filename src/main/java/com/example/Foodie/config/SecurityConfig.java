@@ -55,6 +55,12 @@ public class SecurityConfig {
                                 ).permitAll() // These URLs are publicly accessible
                                 .requestMatchers("/admin/**").hasRole("ADMIN") // URLs starting with /admin/ require ADMIN role
                                 .requestMatchers("/checkout/**", "/orders/**").authenticated() // Secure checkout and future order pages
+                                .requestMatchers("/profile/**").authenticated() // Profile pages require login
+                                .requestMatchers("/files/images/**").permitAll() // Or .authenticated() if pictures should also be protected
+                                // For profile pictures, typically if the profile is viewable by others, the picture endpoint needs to be accessible.
+                                // If only own profile pic is viewable, then this also needs auth.
+                                // Let's assume for now, profile pics are tied to viewing a profile, which is authenticated.
+
                                 .requestMatchers("/checkout").authenticated() // Require authentication for checkout
                                 .anyRequest().authenticated() // All other requests require authentication
                 )

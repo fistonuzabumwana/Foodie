@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title th:text="${user?.username} + ' Profile | Foodie'">My Profile</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/profile.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fredoka+One&display=swap" rel="stylesheet">
+
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/footer.css}"/>
+
+    <link rel="stylesheet" th:href="@{/css/landing-light.css}" />
+    <link rel="stylesheet" th:href="@{/css/Navbar.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<!-- Floating background elements -->
+<div class="profile-bg-elements">
+    <div class="bg-circle-orange"></div>
+    <div class="bg-circle-white"></div>
+    <div class="floating-food floating-avatar"></div>
+</div>
+
+<div class="container profile-container">
+    <!-- Messages -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <!-- Profile Content -->
+    <div th:if="${userProfile}" class="animate__animated animate__fadeIn">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-avatar animate__animated animate__bounceIn">
+                <div class="avatar-wrapper">
+                    <img th:if="${userProfile.profilePictureFileId != null}"
+                         th:src="@{/profile/picture/{userId}(userId=${user.id})}"
+                         alt="Profile Picture" class="profile-picture" />
+                    <img th:unless="${userProfile.profilePictureFileId != null}"
+                         th:src="@{/images/default-avatar.png}"
+                         alt="Default Avatar" class="profile-picture" />
+                    <div class="avatar-overlay">
+                        <a th:href="@{/profile/edit}" class="btn-change-avatar">
+                            <i class="fas fa-camera"></i>
+                        </a>
+                    </div>
+                </div>
+                <h1 class="profile-username" th:text="${user.username}">username</h1>
+                <div class="member-since">
+                    <i class="fas fa-calendar-alt"></i> Member since
+                    <span>May 2025</span>
+                </div>
+            </div>
+            <div class="profile-actions">
+                <a th:href="@{/profile/edit}" class="btn btn-edit-profile">
+                    <i class="fas fa-user-edit me-2"></i> Edit Profile
+                </a>
+                <a th:href="@{/orders/history}" class="btn btn-order-history">
+                    <i class="fas fa-history me-2"></i> Order History
+                </a>
+            </div>
+        </div>
+
+        <!-- Profile Sections -->
+        <div class="profile-sections">
+            <!-- Personal Info -->
+            <div class="profile-section animate__animated animate__fadeInUp">
+                <div class="section-header">
+                    <i class="fas fa-user-circle section-icon"></i>
+                    <h2>Personal Information</h2>
+                </div>
+                <div class="section-content">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-envelope"></i> Email
+                            </div>
+                            <div class="info-value" th:text="${user.email}">user@example.com</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-user"></i> Full Name
+                            </div>
+                            <div class="info-value" th:text="${(userProfile.firstName + ' ' + userProfile.lastName) ?: 'Not set'}">
+                                Not set
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-phone"></i> Phone
+                            </div>
+                            <div class="info-value" th:text="${userProfile.phone ?: 'Not set'}">Not set</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Address -->
+            <div class="profile-section animate__animated animate__fadeInUp" th:if="${userProfile.address}">
+                <div class="section-header">
+                    <i class="fas fa-map-marker-alt section-icon"></i>
+                    <h2>Delivery Address</h2>
+                </div>
+                <div class="section-content">
+                    <div class="address-card">
+                        <div class="address-details">
+                            <div class="address-line" th:if="${userProfile.address.streetAddress}">
+                                <i class="fas fa-road"></i>
+                                <span th:text="${userProfile.address.streetAddress}">123 Main St</span>
+                            </div>
+                            <div class="address-line" th:if="${userProfile.address.sector}">
+                                <i class="fas fa-location-arrow"></i>
+                                <span th:text="${userProfile.address.sector}">Downtown</span>
+                            </div>
+                            <div class="address-line" th:if="${userProfile.address.district}">
+                                <i class="fas fa-city"></i>
+                                <span th:text="${userProfile.address.district}">Cityville</span>
+                            </div>
+                            <div class="address-line" th:if="${userProfile.address.country}">
+                                <i class="fas fa-globe"></i>
+                                <span th:text="${userProfile.address.country}">Country</span>
+                            </div>
+                        </div>
+                        <div class="address-actions">
+                            <a th:href="@{/profile/edit}" class="btn-edit-address">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preferences -->
+            <div class="profile-section animate__animated animate__fadeInUp">
+                <div class="section-header">
+                    <i class="fas fa-heart section-icon"></i>
+                    <h2>Preferences</h2>
+                </div>
+                <div class="section-content">
+                    <div class="preferences-grid">
+                        <div class="preference-item">
+                            <div class="preference-icon">
+                                <i class="fas fa-bell"></i>
+                            </div>
+                            <div class="preference-info">
+                                <h4>Notifications</h4>
+                                <p>Email and SMS notifications</p>
+                            </div>
+                            <div class="preference-toggle">
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="preference-item">
+                            <div class="preference-icon">
+                                <i class="fas fa-newspaper"></i>
+                            </div>
+                            <div class="preference-info">
+                                <h4>Newsletter</h4>
+                                <p>Receive promotions and updates</p>
+                            </div>
+                            <div class="preference-toggle">
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Orders -->
+            <div class="profile-section animate__animated animate__fadeInUp">
+                <div class="section-header">
+                    <i class="fas fa-utensils section-icon"></i>
+                    <h2>Recent Orders</h2>
+                    <a th:href="@{/orders/history}" class="section-action">View All</a>
+                </div>
+                <div class="section-content">
+                    <div class="recent-orders" th:if="${recentOrders != null && !recentOrders.isEmpty()}">
+                        <div th:each="order : ${recentOrders}" class="order-card">
+                            <div class="order-date" th:text="${#temporals.format(order.orderDate, 'MMM d, yyyy')}">Jan 1, 2024</div>
+                            <div class="order-details">
+                                <div class="order-status" th:classappend="${order.status == 'DELIVERED'} ? 'delivered' :
+                                                                         ${order.status == 'CANCELLED'} ? 'cancelled' : 'processing'"
+                                     th:text="${order.status}">PROCESSING</div>
+                                <div class="order-total" th:text="${#numbers.formatCurrency(order.totalAmount)}">$0.00</div>
+                            </div>
+                            <div class="order-actions">
+                                <a th:href="@{/orders/{id}(id=${order.id})}" class="btn-order-details">
+                                    <i class="fas fa-eye"></i> Details
+                                </a>
+                                <a th:href="@{/orders/reorder/{id}(id=${order.id})}" class="btn-reorder">
+                                    <i class="fas fa-redo"></i> Reorder
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="no-orders" th:unless="${recentOrders != null && !recentOrders.isEmpty()}">
+                        <i class="fas fa-shopping-basket"></i>
+                        <p>No recent orders found</p>
+                        <a th:href="@{/products}" class="btn btn-primary-orange">
+                            <i class="fas fa-utensils me-2"></i> Start Ordering
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- No Profile Found -->
+    <div th:unless="${userProfile}" class="no-profile animate__animated animate__fadeIn">
+        <div class="no-profile-icon">
+            <i class="fas fa-exclamation-circle"></i>
+        </div>
+        <h2>Profile Not Found</h2>
+        <p>We couldn't retrieve your profile information. Please try again later.</p>
+        <div class="no-profile-actions">
+            <a th:href="@{/}" class="btn btn-primary-orange">
+                <i class="fas fa-home me-2"></i> Go to Homepage
+            </a>
+            <a th:href="@{/support}" class="btn btn-outline-orange">
+                <i class="fas fa-headset me-2"></i> Contact Support
+            </a>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: mainFooter}"></div>
+
+<!-- Back to Top Button -->
+<a href="#" class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+</a>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script><script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+<script>
+    $(document).ready(function() {
+        // Animate elements sequentially
+        $('.animate__animated').each(function(index) {
+            $(this).css('animation-delay', (index * 0.1) + 's');
+        });
+
+        // Toggle switches
+        $('.switch input').change(function() {
+            const $this = $(this);
+            const isChecked = $this.is(':checked');
+            const preferenceType = $this.closest('.preference-item').find('h4').text();
+
+            // Here you would typically make an AJAX call to save the preference
+            console.log(`${preferenceType} preference set to: ${isChecked ? 'ON' : 'OFF'}`);
+        });
+    });
+</script>
+</body>
+</html>

@@ -2,24 +2,28 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Navbar Fragment</title> <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
-    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <title>Navbar Fragment</title>
+    <!-- Add necessary CSS links if not already included in main layout -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fredoka+One&display=swap" rel="stylesheet">
+
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4" th:fragment="mainNavbar">
-    <div class="container-fluid">
+<nav class="navbar navbar-expand-lg foodie-navbar sticky-top" th:fragment="mainNavbar">
+    <div class="container">
         <a class="navbar-brand" th:href="@{/}">Foodie</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+            <i class="fas fa-bars"></i>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/home}">Home</a>
+                    <a class="nav-link" th:href="@{/home}" >Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/products}">Products</a>
+                    <a class="nav-link" th:href="@{/products}" >Menu</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
                     <a class="nav-link" th:href="@{/admin/products}">Admin Products</a>
@@ -31,34 +35,58 @@
 
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/cart}">
-                        Cart
+                    <a class="nav-link cart-link" th:href="@{/cart}">
+                        <i class="fas fa-shopping-cart me-1"></i> Cart
                         <span th:if="${session.shoppingCart != null && session.shoppingCart.itemCount > 0}"
-                              class="badge bg-danger rounded-pill"
+                              class="cart-badge"
                               th:text="${session.shoppingCart.itemCount}">0</span>
                     </a>
                 </li>
 
                 <th:block sec:authorize="!isAuthenticated()">
-                    <li class="nav-item">
+                    <li class="nav-item d-none d-lg-block">
+                        <a class="nav-link login-btn auth-btn" th:href="@{/login}">Login</a>
+                    </li>
+                    <li class="nav-item d-none d-lg-block">
+                        <a class="nav-link register-btn auth-btn" th:href="@{/register}">Register</a>
+                    </li>
+                    <!-- Mobile view auth links -->
+                    <li class="nav-item d-lg-none">
                         <a class="nav-link" th:href="@{/login}">Login</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item d-lg-none">
                         <a class="nav-link" th:href="@{/register}">Register</a>
                     </li>
                 </th:block>
 
                 <th:block sec:authorize="isAuthenticated()">
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/orders/history}">My Orders</a>
-                    </li>
-                    <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle text-light" href="#" id="navbarUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Welcome, <span sec:authentication="name">User</span>
-                    </a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle me-1"></i>
+                            <span class="welcome-text" sec:authentication="name">User</span>
+                        </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown">
                             <li>
+                                <a class="dropdown-item" th:href="@{/profile}">
+                                    <i class="fas fa-user me-2"></i> My Profile
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" th:href="@{/orders/history}">
+                                    <i class="fas fa-history me-2"></i> Order History
+                                </a>
+                            </li>
+                            <li sec:authorize="hasRole('ROLE_ADMIN')">
+                                <a class="dropdown-item" th:href="@{/admin}">
+                                    <i class="fas fa-cog me-2"></i> Admin Panel
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
                                 <form th:action="@{/perform_logout}" method="post" class="d-inline">
-                                    <button type="submit" class="dropdown-item">Logout</button>
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                    </button>
                                 </form>
                             </li>
                         </ul>
@@ -69,6 +97,17 @@
     </div>
 </nav>
 
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+<script>
+    // Navbar scroll effect
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > 50) {
+            $('.foodie-navbar').addClass('scrolled');
+        } else {
+            $('.foodie-navbar').removeClass('scrolled');
+        }
+    });
+</script>
 </body>
 </html>

@@ -2,75 +2,197 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>Your Shopping Cart - Foodie</title>
+    <title>Your Cart - Foodie</title>
+    <!-- Bootstrap 5 -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
-    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fredoka+One&display=swap" rel="stylesheet">
+
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/footer.css}"/>
+    <link rel="stylesheet" th:href="@{/css/landing-light.css}" />
+
+    <link rel="stylesheet" th:href="@{/css/Navbar.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/cart.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 </head>
 <body>
 <div th:replace="~{fragments/navbar :: mainNavbar}"></div>
 
-<div class="container mt-4">
-    <h2>Your Shopping Cart</h2>
+<!-- Floating background elements -->
+<div class="cart-bg-elements">
+    <div class="bg-circle-orange"></div>
+    <div class="bg-circle-white"></div>
+    <div class="floating-food floating-fries"></div>
+    <div class="floating-food floating-drink"></div>
+</div>
 
-    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
-    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
-
-    <div th:if="${cart == null || cart.items.isEmpty()}" class="text-center">
-        <p class="lead">Your cart is currently empty.</p>
-        <a th:href="@{/products}" class="btn btn-primary">Continue Shopping</a>
+<div class="container cart-container">
+    <!-- Empty Cart State -->
+    <div th:if="${cart == null || cart.items.isEmpty()}" class="empty-cart animate__animated animate__fadeIn">
+        <div class="empty-cart-icon">
+            <i class="fas fa-shopping-basket"></i>
+        </div>
+        <h2>Your cart feels lonely</h2>
+        <p>No delicious items here yet. Let's fix that!</p>
+        <a th:href="@{/products}" class="btn btn-primary-orange">
+            <i class="fas fa-utensils me-2"></i> Explore Menu
+        </a>
     </div>
 
-    <div th:if="${cart != null && !cart.items.isEmpty()}">
-        <table class="table table-hover align-middle">
-            <thead>
-            <tr>
-                <th style="width: 10%;">Image</th>
-                <th style="width: 30%;">Product</th>
-                <th style="width: 15%;">Price</th>
-                <th style="width: 15%;">Quantity</th>
-                <th style="width: 15%;">Subtotal</th>
-                <th style="width: 15%;">Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="item : ${cart.items}">
-                <td>
-                    <img th:src="${item.imageUrl ?: '/images/default-food.png'}" alt="Product Image" class="img-fluid rounded" style="max-height: 75px; max-width: 75px; object-fit: cover;"/>
-                </td>
-                <td th:text="${item.productName}">Product Name</td>
-                <td th:text="${#numbers.formatCurrency(item.price)}">$0.00</td>
-                <td>
-                    <form th:action="@{/cart/update/{productId}(productId=${item.productId})}" method="post" class="d-flex">
-                        <input type="number" name="quantity" th:value="${item.quantity}" min="0" class="form-control form-control-sm" style="width: 70px;" />
-                        <button type="submit" class="btn btn-outline-secondary btn-sm ms-1">Update</button>
-                    </form>
-                </td>
-                <td th:text="${#numbers.formatCurrency(item.subtotal)}">$0.00</td>
-                <td>
-                    <a th:href="@{/cart/remove/{productId}(productId=${item.productId})}" class="btn btn-danger btn-sm"
-                       onclick="return confirm('Are you sure you want to remove this item?');">Remove</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-        <div class="row mt-4">
-            <div class="col-md-8">
-                <a th:href="@{/products}" class="btn btn-outline-secondary">Continue Shopping</a>
+    <!-- Cart with Items -->
+    <div th:if="${cart != null && !cart.items.isEmpty()}" class="animate__animated animate__fadeIn">
+        <!-- Header -->
+        <div class="cart-header">
+            <h1 class="cart-title">Your <span class="highlight">Foodie</span> Cart</h1>
+            <div class="cart-stats">
+                <span class="badge bg-primary-orange">
+                    <i class="fas fa-utensils me-1"></i>
+                    <span th:text="${cart.itemCount}">0</span> items
+                </span>
             </div>
-            <div class="col-md-4 text-end">
-                <h3>Total: <span th:text="${#numbers.formatCurrency(cart.total)}">$0.00</span></h3>
-                <div sec:authorize="isAuthenticated()">
-                    <a th:href="@{/checkout}" class="btn btn-success btn-lg mt-2">Proceed to Checkout</a>
+        </div>
+
+        <!-- Messages -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <!-- Cart Items -->
+        <div class="cart-items">
+            <div th:each="item : ${cart.items}" class="cart-item animate__animated animate__fadeInUp">
+                <div class="item-image">
+                    <img th:src="${item.imageUrl ?: '/images/default-food.png'}"
+                         alt="Product Image"
+                         class="img-fluid" />
                 </div>
-                <div sec:authorize="!isAuthenticated()">
-                    <p class="mt-2"><a th:href="@{/login(redirectUrl='/cart')}" class="btn btn-warning">Login to Checkout</a></p>
+                <div class="item-details">
+                    <h3 class="item-name" th:text="${item.productName}">Product Name</h3>
+                    <div class="item-price" th:text="${#numbers.formatCurrency(item.price)}">$0.00</div>
+                </div>
+                <div class="item-quantity">
+                    <form th:action="@{/cart/update/{productId}(productId=${item.productId})}" method="post" class="quantity-form">
+                        <button type="button" class="quantity-btn minus" onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <input type="number"
+                               name="quantity"
+                               th:value="${item.quantity}"
+                               min="1"
+                               max="99"
+                               class="quantity-input" />
+                        <button type="button" class="quantity-btn plus" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button type="submit" class="btn-update">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </form>
+                </div>
+                <div class="item-subtotal" th:text="${#numbers.formatCurrency(item.subtotal)}">$0.00</div>
+                <div class="item-actions">
+                    <a th:href="@{/cart/remove/{productId}(productId=${item.productId})}"
+                       class="btn-remove"
+                       onclick="return confirmRemove(this);">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cart Summary -->
+        <div class="cart-summary animate__animated animate__fadeInUp">
+            <div class="summary-card">
+                <h3>Order Summary</h3>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span th:text="${#numbers.formatCurrency(cart.total)}">$0.00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery Fee</span>
+                    <span>RF 1000.00</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span th:text="${#numbers.formatCurrency(cart.total + 1000)}">$0.00</span>
+                </div>
+
+                <div sec:authorize="isAuthenticated()" class="mt-4">
+                    <a th:href="@{/checkout}" class="btn btn-checkout">
+                        <i class="fas fa-credit-card me-2"></i> Proceed to Checkout
+                    </a>
+                </div>
+                <div sec:authorize="!isAuthenticated()" class="mt-4">
+                    <p class="login-prompt">Want to checkout?</p>
+                    <a th:href="@{/login(redirectUrl='/cart')}" class="btn btn-login">
+                        <i class="fas fa-sign-in-alt me-2"></i> Login to Continue
+                    </a>
+                </div>
+
+                <div class="continue-shopping">
+                    <a th:href="@{/products}" class="btn btn-continue">
+                        <i class="fas fa-arrow-left me-2"></i> Continue Shopping
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<!-- Inject Footer Fragment -->
+<div th:replace="~{fragments/footer :: mainFooter}"></div>
 
+<!-- Back to Top Button -->
+<a href="#" class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+</a>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+<script>
+    // Remove item confirmation with animation
+    function confirmRemove(link) {
+        if (confirm('Remove this item from your cart?')) {
+            $(link).closest('.cart-item').addClass('animate__animated animate__fadeOutLeft');
+            setTimeout(() => {
+                window.location.href = link.href;
+            }, 500);
+            return false;
+        }
+        return false;
+    }
+
+    // Auto-update quantity when changed (with delay)
+    $(document).ready(function() {
+        $('.quantity-input').change(function() {
+            // Show loading on the update button
+            const $form = $(this).closest('.quantity-form');
+            const $btn = $form.find('.btn-update');
+
+            $btn.html('<i class="fas fa-spinner fa-spin"></i>');
+
+            // Submit after short delay to show feedback
+            setTimeout(() => {
+                $form.submit();
+            }, 300);
+        });
+
+        // Animate items when they appear
+        $('.cart-item').each(function(index) {
+            $(this).css('animation-delay', (index * 0.1) + 's');
+        });
+    });
+</script>
 </body>
 </html>

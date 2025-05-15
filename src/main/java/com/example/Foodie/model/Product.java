@@ -33,8 +33,28 @@ public class Product {
     @Column(precision = 10, scale = 2)
     private BigDecimal price;
 
-    private String imageUrl;
+//    private String imageUrl;
 
     @NotNull(message = "Stock quantity cannot be null")
     private int stockQuantity;
+
+    @Column(name = "image_file_id")
+    private String imageFileId; // Reference to MongoDB GridFS file
+
+    // In com.example.Foodie.model.Product.java
+// ... other fields ...
+    @Size(max = 100) // Example validation
+    private String category;
+// Add getter
+// or getActive() if using Boolean
+    // ... ensure getters/setters are generated (e.g., by Lombok's @Data) ...
+@Column(name = "active")  // Explicit column mapping
+private boolean active; // or Boolean if it can be null
+
+    // Add this method to get the image URL
+    public String getImageUrl() {
+        return this.imageFileId != null ? "/products/image/" + this.id : "/images/default-food.png";
+    }
+
+
 }

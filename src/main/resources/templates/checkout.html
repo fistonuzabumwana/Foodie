@@ -1,46 +1,270 @@
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Checkout - Foodie</title>
+    <!-- Bootstrap 5 -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
-    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fredoka+One&display=swap" rel="stylesheet">
+
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/footer.css}"/>
+
+    <link rel="stylesheet" th:href="@{/css/Navbar.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/checkout.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 </head>
 <body>
-<div th:replace="~{fragments/navbar :: mainNavbar}"></div>  
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
 
-<div class="container mt-4">
-    <h2>Checkout Summary</h2>
-
-    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
-    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
-    <div th:if="${infoMessage}" class="alert alert-info" th:text="${infoMessage}"></div>
-
-
-    <div th:if="${cart != null && !cart.items.isEmpty()}">
-        <h4>Review Your Order:</h4>
-        <ul class="list-group mb-3">
-            <li th:each="item : ${cart.items}" class="list-group-item d-flex justify-content-between lh-sm">
-                <div>
-                    <h6 class="my-0" th:text="${item.productName}">Product name</h6>
-                    <small class="text-muted" th:text="'Quantity: ' + ${item.quantity}">Quantity</small>
-                </div>
-                <span class="text-muted" th:text="${#numbers.formatCurrency(item.subtotal)}">$0.00</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between">
-                <span>Total (USD)</span>
-                <strong th:text="${#numbers.formatCurrency(cart.total)}">$0.00</strong>
-            </li>
-        </ul>
-
-        <form th:action="@{/checkout/place-order}" method="post">
-            <button type="submit" class="btn btn-primary btn-lg">Confirm and Place Order</button>
-        </form>
-    </div>
-    <div th:if="${cart == null || cart.items.isEmpty() && !infoMessage}" class="text-center">
-        <p class="lead">Your cart is empty.</p>
-        <a th:href="@{/products}" class="btn btn-primary">Continue Shopping</a>
-    </div>
+<!-- Floating background elements -->
+<div class="checkout-bg-elements">
+    <div class="bg-circle-orange"></div>
+    <div class="bg-circle-white"></div>
+    <div class="floating-food floating-delivery"></div>
 </div>
 
+<div class="container checkout-container">
+    <!-- Empty Cart State -->
+    <div th:if="${cart == null || cart.items.isEmpty() && !infoMessage}" class="empty-cart animate__animated animate__fadeIn">
+        <div class="empty-cart-icon">
+            <i class="fas fa-shopping-basket"></i>
+        </div>
+        <h2>Nothing to checkout yet</h2>
+        <p>Your cart is currently empty. Let's find something delicious!</p>
+        <a th:href="@{/products}" class="btn btn-primary-orange">
+            <i class="fas fa-utensils me-2"></i> Explore Menu
+        </a>
+    </div>
+
+    <!-- Checkout Form -->
+    <div th:if="${cart != null && !cart.items.isEmpty()}" class="animate__animated animate__fadeIn">
+        <!-- Messages -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${infoMessage}" class="alert alert-info alert-dismissible fade show" role="alert">
+            <span th:text="${infoMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div class="checkout-grid">
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <div class="summary-header">
+                    <h2><i class="fas fa-receipt me-2"></i> Order Summary</h2>
+                    <a th:href="@{/cart}" class="btn-edit-cart">
+                        <i class="fas fa-edit me-1"></i> Edit Cart
+                    </a>
+                </div>
+
+                <div class="order-items">
+                    <div th:each="item : ${cart.items}" class="order-item animate__animated animate__fadeIn">
+                        <div class="item-image">
+                            <img th:src="${item.imageUrl ?: '/images/default-food.png'}"
+                                 alt="Product Image"
+                                 class="img-fluid" />
+                        </div>
+                        <div class="item-details">
+                            <h4 th:text="${item.productName}">Product Name</h4>
+                            <div class="item-meta">
+                                <span class="item-quantity" th:text="'×' + ${item.quantity}">×1</span>
+                                <span class="item-price" th:text="${#numbers.formatCurrency(item.price)}">$0.00</span>
+                            </div>
+                        </div>
+                        <div class="item-subtotal" th:text="${#numbers.formatCurrency(item.subtotal)}">$0.00</div>
+                    </div>
+                </div>
+
+                <div class="order-totals">
+                    <div class="total-row">
+                        <span>Subtotal</span>
+                        <span th:text="${#numbers.formatCurrency(cart.getTotal())}">$0.00</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Delivery Fee</span>
+                        <span>RF 1000.00</span>
+                    </div>
+                    <div class="total-row grand-total">
+                        <span>Total</span>
+                        <span th:text="${#numbers.formatCurrency(cart.total + 1000)}">$0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Checkout Form -->
+            <div class="checkout-form">
+                <div class="form-header">
+                    <h2><i class="fas fa-truck me-2"></i> Delivery Details</h2>
+                    <div class="delivery-estimate">
+                        <i class="fas fa-clock"></i> Estimated delivery: 30-45 mins
+                    </div>
+                </div>
+
+                <form th:object="${userProfileDto}" th:action="@{/checkout/place-order}" method="post" id="checkoutForm">
+                    <!-- Delivery Address -->
+                    <div th:if="${userProfile.address}" class="form-section">
+                        <h3><i class="fas fa-map-marker-alt me-2"></i> Delivery Address</h3>
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Street Address</label>
+                            <input type="text" class="form-control" id="address" name="address" required
+                                   th:value="${streetAddress ?: ''}">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="city" class="form-label">Sector</label>
+                                <input type="text" class="form-control" id="city" name="city" required
+                                       th:value="${sector ?: ''}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="zipCode" class="form-label">District</label>
+                                <input type="text" class="form-control" id="zipCode" name="zipCode" required
+                                       th:value="${district?: ''}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Info -->
+                    <div th:if="${userProfile}" class="form-section">
+                        <h3><i class="fas fa-phone me-2"></i> Contact Information</h3>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" required
+                                   th:value="${userProfile.phone ?: ''}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required
+                                   th:value="${user.email ?: ''}">
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-credit-card me-2"></i> Payment Method</h3>
+                        <div class="payment-methodss">
+                            <div class="payment-methodd active">
+                                <input type="radio" id="creditCard" name="paymentMethod" value="CREDIT_CARD" checked>
+                                <label for="creditCard">
+                                    <i class="fab fa-cc-visa"></i>
+                                    <i class="fab fa-cc-mastercard"></i>
+                                    Credit/Debit Card
+                                </label>
+                            </div>
+                            <div class="payment-methodd">
+                                <input type="radio" id="paypal" name="paymentMethod" value="PAYPAL">
+                                <label for="paypal">
+                                    <i class="fab fa-cc-paypal"></i>
+                                    PayPal
+                                </label>
+                            </div>
+                            <div class="payment-methodd">
+                                <input type="radio" id="cash" name="paymentMethod" value="CASH">
+                                <label for="cash">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    Cash on Delivery
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Credit Card Fields (shown by default) -->
+                        <div class="credit-card-fields">
+                            <div class="mb-3">
+                                <label for="cardNumber" class="form-label">Card Number</label>
+                                <input type="text" class="form-control" id="cardNumber" name="cardNumber"
+                                       placeholder="1234 5678 9012 3456">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="expiryDate" class="form-label">Expiry Date</label>
+                                    <input type="text" class="form-control" id="expiryDate" name="expiryDate"
+                                           placeholder="MM/YY">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="cvv" class="form-label">CVV</label>
+                                    <input type="text" class="form-control" id="cvv" name="cvv" placeholder="123">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Special Instructions -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-comment-alt me-2"></i> Special Instructions</h3>
+                        <div class="mb-3">
+                            <textarea class="form-control" id="instructions" name="instructions"
+                                      rows="3" placeholder="Any special delivery instructions..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Place Order Button -->
+                    <div class="place-order">
+                        <button type="submit" class="btn btn-place-order">
+                            <i class="fas fa-check-circle me-2"></i> Confirm & Place Order
+                        </button>
+                        <p class="secure-checkout">
+                            <i class="fas fa-lock"></i> Secure checkout
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Inject Footer Fragment -->
+<div th:replace="~{fragments/footer :: mainFooter}"></div>
+
+<!-- Back to Top Button -->
+<a href="#" class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+</a>
+
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+<script>
+    $(document).ready(function() {
+        // Payment method selection
+        $('.payment-methodd').click(function() {
+            $('.payment-methodd').removeClass('active');
+            $(this).addClass('active');
+            $(this).find('input[type="radio"]').prop('checked', true);
+
+            // Show/hide credit card fields
+            if ($('#creditCard').is(':checked')) {
+                $('.credit-card-fields').show();
+            } else {
+                $('.credit-card-fields').hide();
+            }
+        });
+
+        // Form submission animation
+        $('#checkoutForm').submit(function(e) {
+            $('.btn-place-order').html('<i class="fas fa-spinner fa-spin me-2"></i> Processing...');
+            $('.btn-place-order').prop('disabled', true);
+
+            // You might want to add actual form validation here
+            return true;
+        });
+
+        // Animate items when they appear
+        $('.order-item').each(function(index) {
+            $(this).css('animation-delay', (index * 0.1) + 's');
+        });
+    });
+</script>
 </body>
 </html>
