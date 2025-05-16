@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @Service
-public class FileStorageServiceImpl implements FileStorageService {
+public class    FileStorageServiceImpl implements FileStorageService {
 
     private final GridFsTemplate gridFsTemplate;
     private final GridFsOperations gridFsOperations; // Provides getResource
