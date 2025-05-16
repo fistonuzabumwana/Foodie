@@ -4,6 +4,9 @@ import com.example.Foodie.dto.ShoppingCart;
 import com.example.Foodie.exception.InsufficientStockException;
 import com.example.Foodie.model.Order;
 import com.example.Foodie.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,4 +23,8 @@ public interface OrderService {
     // New methods for Admin
     List<Order> findAllOrdersOrderByDateDesc();
     Order updateOrderStatus(Long orderId, String newStatus) throws Exception; // Can throw if order not found or status invalid
+
+    Page<Order> findAllOrdersWithUserAndItems(Pageable pageable);
+
+    Optional<Order> findOrderWithUserAndItems(Long orderId);
 }

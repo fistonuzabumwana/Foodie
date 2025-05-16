@@ -3,27 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <title>Internal Server Error (500) - Foodie</title>
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fredoka+One&display=swap" rel="stylesheet">
+
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/footer.css}"/>
+
+    <link rel="stylesheet" th:href="@{/css/landing-light.css}" />
+    <link rel="stylesheet" th:href="@{/css/Navbar.css}">
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
-    <style>
-        body { display: flex; flex-direction: column; min-height: 100vh; }
-        .content { flex: 1; }
-    </style>
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- Custom Error CSS -->
+    <link rel="stylesheet" th:href="@{/css/error-pages.css}" />
 </head>
-<body>
+<body class="error-page">
+<!-- Floating background elements -->
+<div class="error-bg-elements">
+    <div class="bg-circle bg-circle-orange"></div>
+    <div class="bg-circle bg-circle-white"></div>
+    <div class="floating-food burger"></div>
+    <div class="floating-food pizza"></div>
+</div>
+
+<!-- Navbar -->
 <div th:replace="~{fragments/navbar :: mainNavbar}"></div>
 
-<div class="container content text-center mt-5 pt-5">
-    <h1 class="display-1">500</h1>
-    <h2>Oops! Something Went Wrong.</h2>
-    <p class="lead">
-        We're sorry, but an unexpected error occurred on our server. Please try again later.
-    </p>
-    <img th:src="@{/images/error-500.jpg}" alt="Server Error" style="max-width: 300px; margin: 20px auto;" /> <div class="mt-4">
-    <a th:href="@{/}" class="btn btn-primary btn-lg">Go to Homepage</a>
-</div>
-</div>
+<!-- Main Content -->
+<main class="error-container">
+    <div class="error-content animate__animated animate__fadeIn">
+        <div class="error-illustration">
+            <img th:src="@{/images/error-500.svg}" alt="Server Error Illustration" class="img-fluid" />
+        </div>
+        <div class="error-details">
+            <h1 class="error-code animate__animated animate__pulse animate__infinite">500</h1>
+            <h2 class="error-title">Oops! Server Error</h2>
+            <p class="error-message">
+                Our chefs are working hard to fix this unexpected error in the kitchen.
+                Please try again later or return to our homepage.
+            </p>
+            <div class="error-actions">
+                <a th:href="@{/}" class="btn btn-primary-orange">
+                    <i class="fas fa-home me-2"></i> Back to Homepage
+                </a>
+                <a href="mailto:support@foodie.com" class="btn btn-outline-orange">
+                    <i class="fas fa-envelope me-2"></i> Contact Support
+                </a>
+            </div>
+            <div class="error-tech-info" th:if="${error}">
+                <button class="btn btn-sm btn-link" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#errorDetails" aria-expanded="false" aria-controls="errorDetails">
+                    <i class="fas fa-info-circle me-1"></i> Technical Details
+                </button>
+                <div class="collapse mt-2" id="errorDetails">
+                    <div class="card card-body error-details-card">
+                        <small>
+                            <strong>Error:</strong>
+                            <span th:text="${error}">Internal Server Error</span>
+                        </small>
+                        <small th:if="${message}">
+                            <strong>Message:</strong>
+                            <span th:text="${message}">Error message</span>
+                        </small>
+                        <small th:if="${path}">
+                            <strong>Path:</strong>
+                            <span th:text="${path}">Request path</span>
+                        </small>
+                        <small th:if="${timestamp}">
+                            <strong>Time:</strong>
+                            <span th:text="${#temporals.format(timestamp, 'yyyy-MM-dd HH:mm:ss')}">Timestamp</span>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
 
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: mainFooter}"></div>
+<!-- Back to Top Button -->
+<a href="#" class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+</a>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/error-pages.js}"></script>
 </body>
 </html>
+

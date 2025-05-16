@@ -10,6 +10,8 @@ import com.example.Foodie.model.User;
 import com.example.Foodie.repository.OrderRepository;
 import com.example.Foodie.repository.ProductRepository; // To update stock
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -147,4 +149,15 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(newStatus);
         return orderRepository.save(order);
     }
+
+    @Override
+    public Page<Order> findAllOrdersWithUserAndItems(Pageable pageable) {
+        return orderRepository.findAllWithUserAndItems(pageable);
+    }
+
+    @Override
+    public Optional<Order> findOrderWithUserAndItems(Long orderId) {
+        return orderRepository.findWithUserAndItems(orderId);
+    }
+
 }

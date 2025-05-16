@@ -28,6 +28,7 @@ public class User {
     @Column(name = "role")
     private Set<String> roles;
 
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

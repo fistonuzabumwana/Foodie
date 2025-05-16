@@ -2,67 +2,230 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title th:text="'Admin - Order Details - #' + ${order?.id}">Order Details</title>
+    <!-- Bootstrap 5 -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
-    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Admin CSS -->
+    <link rel="stylesheet" th:href="@{/css/adminorders.css}" />
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 </head>
-<body>
+<body class="admin-order-detail">
+<!-- Floating background elements -->
+<div class="admin-bg-elements">
+    <div class="bg-circle bg-circle-orange"></div>
+    <div class="bg-circle bg-circle-white"></div>
+</div>
+
+<!-- Navbar -->
 <div th:replace="~{fragments/navbar :: mainNavbar}"></div>
 
-<div class="container mt-4">
-    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
-    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+<!-- Main Content -->
+<div class="admin-container">
+    <div class="admin-header">
+        <div class="header-content">
+            <h2 class="admin-title">
+                <i class="fas fa-receipt me-2"></i>
+                Order #<span th:text="${order?.id}">123</span>
+            </h2>
+            <div class="header-actions">
+                <a th:href="@{/admin/orders/print/{orderId}(orderId=${order.id})}" target="_blank" class="btn btn-outline-secondary">
+                    <i class="fas fa-print me-2"></i> Print Invoice
+                </a>
+                <a th:href="@{/admin/orders}" class="btn btn-back">
+                    <i class="fas fa-arrow-left me-2"></i> Back to Orders
+                </a>
+            </div>
+        </div>
+    </div>
 
-    <div th:if="${order}">
-        <h2>Order Details - #<span th:text="${order.id}">123</span></h2>
+    <!-- Alerts -->
+    <div class="admin-alerts">
+        <div th:if="${successMessage}" class="alert alert-success animate__animated animate__fadeInDown">
+            <i class="fas fa-check-circle me-2"></i>
+            <span th:text="${successMessage}"></span>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger animate__animated animate__headShake">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <span th:text="${errorMessage}"></span>
+        </div>
+    </div>
+
+    <div th:if="${order}" class="order-detail-container">
+        <!-- Order Summary -->
+        <div class="order-summary-card">
+            <div class="order-status-badge" th:classappend="'status-' + ${order.status.toLowerCase()}">
+                <span th:text="${order.status}"></span>
+            </div>
+            <div class="order-meta">
+                <div class="meta-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span th:text="${#temporals.format(order.orderDate, 'MMM dd, yyyy HH:mm')}"></span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-dollar-sign"></i>
+                    <span th:text="${#numbers.formatCurrency(order.totalAmount)}"></span>
+                </div>
+                <div class="meta-item" th:if="${order.deliveryAddress}">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span th:text="${order.deliveryAddress}"></span>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
-            <div class="col-md-8">
-                <div class="card mb-4">
-                    <div class="card-header">Order Information</div>
-                    <div class="card-body">
-                        <p><strong>Customer:</strong> <span th:text="${order.user?.username ?: 'N/A'}"></span></p>
-                        <p><strong>Email:</strong> <span th:text="${order.user?.email ?: 'N/A'}"></span></p>
-                        <p><strong>Order Date:</strong> <span th:text="${#temporals.format(order.orderDate, 'dd-MMM-yyyy HH:mm')}"></span></p>
-                        <p><strong>Current Status:</strong> <span class="fw-bold" th:text="${order.status}"></span></p>
-                        <p><strong>Order Total:</strong> <span class="fw-bold" th:text="${#numbers.formatCurrency(order.totalAmount)}"></span></p>
+            <!-- Left Column - Order Items -->
+            <div class="col-lg-8">
+                <div class="order-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-utensils me-2"></i>
+                        Order Items
+                    </h3>
+                    <div class="order-items">
+                        <div class="order-item" th:each="item : ${order.orderItems}">
+                            <div class="item-image" th:if="${item.product.imageUrl}">
+                                <img th:src="@{${item.product.imageUrl}}" alt="Product image" class="img-thumbnail">
+                            </div>
+                            <div class="item-details">
+                                <h4 th:text="${item.product.name}">Product Name</h4>
+                                <div class="item-meta">
+                                    <span class="item-price" th:text="${#numbers.formatCurrency(item.priceAtPurchase)}"></span>
+                                    <span class="item-quantity">x <span th:text="${item.quantity}"></span></span>
+                                    <span class="item-subtotal" th:text="${#numbers.formatCurrency(item.priceAtPurchase.multiply(new java.math.BigDecimal(item.quantity)))}"></span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <h4>Items Ordered:</h4>
-                <table class="table table-sm">
-                    <thead>
-                    <tr><th>Product</th><th>Quantity</th><th>Price @ Purchase</th><th>Subtotal</th></tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="item : ${order.orderItems}">
-                        <td th:text="${item.product.name}">Product Name</td>
-                        <td th:text="${item.quantity}">1</td>
-                        <td th:text="${#numbers.formatCurrency(item.priceAtPurchase)}"></td>
-                        <td th:text="${#numbers.formatCurrency(item.priceAtPurchase.multiply(new java.math.BigDecimal(item.quantity)))}"></td>
-                    </tr>
-                    </tbody>
-                </table>
+                <!-- Order Notes -->
+                <div class="order-section" th:if="${order.notes}">
+                    <h3 class="section-title">
+                        <i class="fas fa-sticky-note me-2"></i>
+                        Order Notes
+                    </h3>
+                    <div class="order-notes" th:text="${order.notes}"></div>
+                </div>
             </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">Update Order Status</div>
-                    <div class="card-body">
-                        <form th:action="@{/admin/orders/update-status/{orderId}(orderId=${order.id})}" method="post">
-                            <div class="mb-3">
-                                <label for="status" class="form-label">New Status:</label>
-                                <select id="status" name="status" class="form-select">
-                                    <option th:each="st : ${statuses}" th:value="${st}" th:text="${st}" th:selected="${st == order.status}"></option>
-                                </select>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Update Status</button>
-                        </form>
+
+            <!-- Right Column - Customer & Actions -->
+            <div class="col-lg-4">
+                <!-- Customer Info -->
+                <div class="order-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-user me-2"></i>
+                        Customer Information
+                    </h3>
+                    <div class="customer-info">
+                        <div class="info-item">
+                            <i class="fas fa-user-circle"></i>
+                            <span th:text="${order.user?.username ?: 'Guest'}"></span>
+                        </div>
+                        <div class="info-item" th:if="${order.user?.email}">
+                            <i class="fas fa-envelope"></i>
+                            <a th:href="'mailto:' + ${order.user.email}" th:text="${order.user.email}"></a>
+                        </div>
+                        <div class="info-item" th:if="${order.user?.phone}">
+                            <i class="fas fa-phone"></i>
+                            <a th:href="'tel:' + ${order.user.phone}" th:text="${order.user.phone}"></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Update -->
+                <div class="order-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-sync-alt me-2"></i>
+                        Update Status
+                    </h3>
+                    <form th:action="@{/admin/orders/update-status/{orderId}(orderId=${order.id})}" method="post" class="status-form">
+                        <div class="mb-3">
+                            <select id="status" name="status" class="form-select" required>
+                                <option th:each="st : ${statuses}"
+                                        th:value="${st}"
+                                        th:text="${st}"
+                                        th:selected="${st == order.status}"
+                                        th:disabled="${st == order.status}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="mb-3" th:if="${order.status != 'COMPLETED' && order.status != 'CANCELLED'}">
+                            <label for="statusNotes" class="form-label">Status Notes (Optional)</label>
+                            <textarea id="statusNotes" name="notes" class="form-control" rows="3"
+                                      placeholder="Add any notes about this status change..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary-orange w-100">
+                            <i class="fas fa-save me-2"></i> Update Order Status
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Order Actions -->
+                <div class="order-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-cog me-2"></i>
+                        Order Actions
+                    </h3>
+                    <div class="order-actions">
+                        <a th:href="@{/admin/orders/resend-confirmation/{orderId}(orderId=${order.id})}"
+                           class="btn btn-outline-secondary w-100 mb-2">
+                            <i class="fas fa-paper-plane me-2"></i> Resend Confirmation
+                        </a>
+                        <button th:if="${order.status != 'CANCELLED'}"
+                                class="btn btn-outline-danger w-100"
+                                data-bs-toggle="modal"
+                                data-bs-target="#cancelOrderModal">
+                            <i class="fas fa-times-circle me-2"></i> Cancel Order
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-        <a th:href="@{/admin/orders}" class="btn btn-outline-secondary mt-3">Back to All Orders</a>
     </div>
-    <div th:unless="${order}" class="alert alert-warning">Order details could not be loaded.</div>
+
+    <div th:unless="${order}" class="no-order">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h3>Order Not Found</h3>
+        <p>The requested order could not be loaded. It may have been deleted or the ID is incorrect.</p>
+        <a th:href="@{/admin/orders}" class="btn btn-primary-orange">
+            <i class="fas fa-arrow-left me-2"></i> Back to Orders
+        </a>
+    </div>
 </div>
+
+<!-- Cancel Order Modal -->
+<div class="modal fade" id="cancelOrderModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cancel Order #<span th:text="${order?.id}"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form th:action="@{/admin/orders/cancel/{orderId}(orderId=${order.id})}" method="post">
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        This action cannot be undone. The customer will be notified of the cancellation.
+                    </div>
+                    <div class="mb-3">
+                        <label for="cancelReason" class="form-label">Reason for Cancellation</label>
+                        <textarea class="form-control" id="cancelReason" name="reason" rows="3" required
+                                  placeholder="Please specify the reason for cancelling this order..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Confirm Cancellation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/admin-orders.js}"></script>
 </body>
 </html>

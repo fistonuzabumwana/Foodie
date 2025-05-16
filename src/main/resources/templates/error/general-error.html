@@ -2,19 +2,71 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${errorTitle ?: 'An Error Occurred'}">An Error Occurred</title>
+    <title>Page Not Found (404) - Foodie</title>
+    <!-- Bootstrap 5 -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
-    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- Custom Error CSS -->
+    <link rel="stylesheet" th:href="@{/css/error-pages.css}" />
 </head>
-<body>
-<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
-<div class="container mt-5">
-    <h2 th:text="${errorTitle ?: 'An Error Occurred'}">Error</h2>
-    <div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}">
-        Default error message.
-    </div>
-    <a th:href="@{/}" class="btn btn-primary">Go to Homepage</a>
+<body class="error-page error-404">
+<!-- Floating background elements -->
+<div class="error-bg-elements">
+    <div class="bg-circle bg-circle-orange"></div>
+    <div class="bg-circle bg-circle-white"></div>
+    <div class="floating-food burger"></div>
+    <div class="floating-food pizza"></div>
+    <div class="floating-food taco"></div>
 </div>
+
+<!-- Navbar -->
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<!-- Main Content -->
+<main class="error-container">
+    <div class="error-content animate__animated animate__fadeIn">
+        <div class="error-illustration">
+            <img th:src="@{/images/404-illustration.svg}" alt="Page Not Found Illustration" class="img-fluid" />
+        </div>
+        <div class="error-details">
+            <h1 class="error-code animate__animated animate__shakeX">404</h1>
+            <h2 class="error-title">Hungry for Something Else?</h2>
+            <p class="error-message">
+                The page you're looking for doesn't exist or may have been moved.
+                While our chefs look for it, why not try one of these delicious options?
+            </p>
+            <div class="error-actions">
+                <a th:href="@{/}" class="btn btn-primary-orange">
+                    <i class="fas fa-home me-2"></i> Back to Homepage
+                </a>
+                <a th:href="@{/products}" class="btn btn-outline-orange">
+                    <i class="fas fa-utensils me-2"></i> Browse Menu
+                </a>
+            </div>
+            <div class="search-suggestion mt-4">
+                <p>Or search for what you're looking for:</p>
+                <form th:action="@{/search}" method="get" class="search-form">
+                    <div class="input-group">
+                        <input type="text" name="query" class="form-control" placeholder="Search Foodie..." />
+                        <button class="btn btn-primary-orange" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: mainFooter}"></div>
+
+<!-- Scripts -->
+<script th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/error-pages.js}"></script>
 </body>
 </html>
