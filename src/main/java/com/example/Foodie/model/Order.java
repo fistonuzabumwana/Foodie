@@ -32,6 +32,11 @@ public class Order {
     @Column(nullable = false)
     private String status; // e.g., PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELLED
 
+    @Column(nullable = true)
+    private String notes; // or whatever type you're using
+
+
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount;
+
 }

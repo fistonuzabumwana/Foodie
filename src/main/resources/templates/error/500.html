@@ -85,7 +85,9 @@
                         </small>
                         <small th:if="${timestamp}">
                             <strong>Time:</strong>
-                            <span th:text="${#temporals.format(timestamp, 'yyyy-MM-dd HH:mm:ss')}">Timestamp</span>
+<!--                            <span th:text="${#dates.format(timestamp, 'yyyy-MM-dd HH:mm:ss')}">Timestamp</span>-->
+                            <!-- Use #temporals for Java 8 time objects -->
+                            <span th:text="${#temporals.format(timestamp, 'MMM dd, yyyy HH:mm')}">Timestamp</span>
                         </small>
                     </div>
                 </div>

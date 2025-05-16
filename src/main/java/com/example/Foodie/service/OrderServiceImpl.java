@@ -157,7 +157,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Optional<Order> findOrderWithUserAndItems(Long orderId) {
-        return orderRepository.findWithUserAndItems(orderId);
+        return orderRepository.findByIdWithUserAndItemsAndProfile(orderId);
     }
 
 }

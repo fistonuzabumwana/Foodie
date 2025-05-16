@@ -1,6 +1,7 @@
 package com.example.Foodie.controller.admin;
 
 import com.example.Foodie.model.Order;
+import com.example.Foodie.model.UserProfile;
 import com.example.Foodie.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -61,15 +62,6 @@ public class AdminOrderController {
     // Admin view for a specific order
     @GetMapping("/view/{orderId}")
     public String viewOrderDetails(@PathVariable("orderId") Long orderId, Model model, RedirectAttributes redirectAttributes) {
-//        Optional<Order> orderOptional = orderService.findOrderById(orderId); // Using the general findOrderById
-//        if (orderOptional.isPresent()) {
-//            model.addAttribute("order", orderOptional.get());
-//            model.addAttribute("statuses", ORDER_STATUSES); // For status update dropdown
-//            return "admin/order-detail"; // Path to admin/order-detail.html
-//        } else {
-//            redirectAttributes.addFlashAttribute("errorMessage", "Order not found.");
-//            return "redirect:/admin/orders";
-//        }
         Optional<Order> orderOptional = orderService.findOrderWithUserAndItems(orderId);
         if (orderOptional.isPresent()) {
             model.addAttribute("order", orderOptional.get());

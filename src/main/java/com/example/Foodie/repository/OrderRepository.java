@@ -35,4 +35,13 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @EntityGraph(attributePaths = {"user", "user.roles", "orderItems", "orderItems.product"})
     @Query("SELECT o FROM Order o WHERE o.id = :orderId")
     Optional<Order> findWithUserAndItems(@Param("orderId") Long orderId);
+
+
+    @Query("SELECT o FROM Order o " +
+            "LEFT JOIN FETCH o.user u " +
+            "LEFT JOIN FETCH u.userProfile " +  // Changed from profile to userProfile
+            "LEFT JOIN FETCH o.orderItems i " +
+            "LEFT JOIN FETCH i.product " +
+            "WHERE o.id = :orderId")
+    Optional<Order> findByIdWithUserAndItemsAndProfile(@Param("orderId") Long orderId);
 }
